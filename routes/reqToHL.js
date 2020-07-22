@@ -2,9 +2,25 @@ const express = require('express')
 const router = express.Router()
 
 router.post('/', async (req,res) => {
-    const {error} = validate(req.body)
-    if (error)  return res.status(400).send(error.details[0].message)
-    res.send('box')
+    var data = new Date();
+    var gg, mm, aaaa;
+    gg = data.getDate() + "/";
+    mm = data.getMonth() + 1 + "/";
+    aaaa = data.getFullYear();
+
+    var objToSend = {
+        name: req.body.name,
+        surname: req.body.surname,
+        birthday: req.body.day + '/'+ req.body.month + '/'+req.body.year,
+        day: gg + mm + aaaa,
+        street: req.body.street,
+        city: req.body.city,
+        cap: req.body.cap,
+        to: req.body.to,
+        service: req.body.service
+    }
+
+    res.send(objToSend)
 })
 
 module.exports = router
