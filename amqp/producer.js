@@ -3,48 +3,52 @@ const config = require('config')
 
 function sendInfoToOneServer(info){
 
-    //const service = info.service
-
-    //Some logic to determine which service has to be used must be put here...
-    
     amqp.connect('amqp://localhost', function(error0, connection) {
-    
     if (error0) {
         throw error0;
     }
-  
     connection.createChannel(function(error1, channel) {
         if (error1) {
             throw error1;
         }
-        
-        const queue = config.get('amqp_queue');
+        const exchange = config.get('amqp_exchange')
 
-        channel.assertQueue(queue, {
-            durable: false
-        });
+        const day = info.day.split("/")
+        const birthday = info.birthday.split("/") 
 
-        /*const dataToSend = {
+        const dataToSend = {
             name: info.name,
             surname: info.surname,
-            birthday: info.birthday,  // ...
-            day: info.day,  // ...
+            birthday_day: birthday[0],
+            birthday_month: birthday[1],
+            birthday_year: birthday[2],
+            day: day[0],
+            month: day[1],
+            year: day[2],
             street: info.street,
             city: info.city,
             cap: info.cap,
             to: info.to
-        }*/
+        }
 
-        channel.sendToQueue(queue, Buffer.from(JSON.stringify(msg)));
-        console.log(" [x] Sent %s", msg);
+        const service = info.service
+
+        channel.assertExchange(exchange, 'direct', {
+            durable: false
+        });
+
+        channel.publish(exchange, service, Buffer.from(JSON.stringify(dataToSend)));
+        
+        console.log("Info sent to service "+service);
     });
 
     setTimeout(function() { 
         connection.close(); 
         process.exit(0) 
     }, 500);
-
     });
 }
+
+
 
 exports.sendInfoToOneServer = sendInfoToOneServer

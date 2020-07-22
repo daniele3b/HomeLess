@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const {sendInfoToOneServer} = require('../amqp/producer.js')
 
 router.post('/', async (req,res) => {
     var data = new Date();
@@ -19,6 +20,8 @@ router.post('/', async (req,res) => {
         to: req.body.to,
         service: req.body.service
     }
+    
+    sendInfoToOneServer(objToSend)
 
     res.send(objToSend)
 })
