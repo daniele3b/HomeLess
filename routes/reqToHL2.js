@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { sendInfoToOneServer } = require("../amqp/producer.js");
 
-router.post("/", async (req, res) => {
+router.post("/service2", async (req, res) => {
   var data = new Date();
   var gg, mm, aaaa;
   gg = data.getDate() + "/";
@@ -13,13 +13,10 @@ router.post("/", async (req, res) => {
     name: req.body.name,
     surname: req.body.surname,
     email: req.body.email,
-    birthday: req.body.day + "/" + req.body.month + "/" + req.body.year,
-    day: gg + mm + aaaa,
+    day: req.body.day + "/" + req.body.month + "/" + req.body.year,
     street: req.body.street,
-    city: req.body.city,
-    cap: req.body.cap,
-    to: req.body.to,
-    service: req.body.service,
+    cash: req.body.cash,
+    service: 2
   };
 
   sendInfoToOneServer(objToSend);
