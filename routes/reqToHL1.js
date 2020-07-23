@@ -19,7 +19,7 @@ router.post("/service1", async (req, res) => {
     city: req.body.city,
     cap: req.body.cap,
     to: req.body.to,
-    service: 1
+    service: "1",
   };
 
   sendInfoToOneServer(objToSend);

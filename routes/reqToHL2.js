@@ -16,7 +16,7 @@ router.post("/service2", async (req, res) => {
     day: req.body.day + "/" + req.body.month + "/" + req.body.year,
     street: req.body.street,
     cash: req.body.cash,
-    service: 2
+    service: "2",
   };
 
   sendInfoToOneServer(objToSend);
