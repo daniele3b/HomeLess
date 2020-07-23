@@ -18,6 +18,7 @@ function sendInfoToOneServer(info) {
       const dataToSend = {
         name: info.name,
         surname: info.surname,
+        email: info.email,
         birthday_day: birthday[0],
         birthday_month: birthday[1],
         birthday_year: birthday[2],
