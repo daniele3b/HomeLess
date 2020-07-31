@@ -225,4 +225,26 @@ router.get("/consensus", (req, res) => {
   });
 });
 
+router.get("/getTransaction/:id", (req, res) => {
+    const id = req.params.id
+
+    const chain = ledger.chain
+    const chainLength = chain.length
+    let i
+
+    for(i=0;i<chainLength;i++){
+        let j
+        const transactions = chain[i].transactions
+        const transactionsLength = transactions.length
+        
+        for(j=0;j<transactionsLength;j++){
+            const transaction = transactions[j]
+            
+            if(transaction.userData.id == id) return res.status(200).send(transaction)
+        }
+    }
+
+    res.status(404).send("Transaction with the given id not found")
+})
+
 module.exports = router;
