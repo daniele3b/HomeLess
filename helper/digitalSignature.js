@@ -5,16 +5,16 @@ const config = require("config");
 require("dotenv").config();
 
 var EC = require("elliptic").ec;
-
+var ec = new EC(config.get("ec_curve_name"));
 // function used to verify signature
-function verify(publicKey, file, signature) {
+function verifyHash(publicKey, file, signature) {
   const doc = fs.readFileSync(file);
   var shaMsgF = crypto
     .createHash(config.get("hashing_function"))
     .update(doc)
     .digest();
 
-  console.log("Verified: " + publicKey.verify(shaMsgF, signature));
+  return publicKey.verify(shaMsgF, signature);
 }
 
-exports.verify = verify;
+exports.verifyHash = verifyHash;
