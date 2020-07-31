@@ -225,8 +225,8 @@ router.get("/consensus", (req, res) => {
   });
 });
 
-router.get("/getTransaction/:id", (req, res) => {
-    const id = req.params.id
+router.get("/getTransaction/:pdfId", (req, res) => {
+    const id = req.params.pdfId
 
     const chain = ledger.chain
     const chainLength = chain.length
