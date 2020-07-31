@@ -21,13 +21,18 @@ router.post("/verifyDocument", async (req, res) => {
 
   let signature;
   let publicKey;
-  const transaction = await axios(options);
-
-  signature = transaction.data.signature;
-  publicKey = transaction.data.publicKey;
-  let key = ec.keyFromPublic(publicKey, "hex");
-  if (verifyHash(key, path, signature)) res.status(200).send("Pdf is valid!");
-  else res.status(400).send("Pdf in not valid!");
+  axios(options)
+    .then((transaction) => {
+      signature = transaction.data.signature;
+      publicKey = transaction.data.publicKey;
+      let key = ec.keyFromPublic(publicKey, "hex");
+      if (verifyHash(key, path, signature))
+        res.status(200).send("Pdf is valid!");
+      else res.status(400).send("Pdf is not valid!");
+    })
+    .catch((err) => {
+      return res.status(404).send("Pdf not found!");
+    });
 });
 
 module.exports = router;
