@@ -10,5 +10,8 @@
   "port": "8080",
   "currentNodeUrl": "http://localhost:",
   "blockChainActive": "yes",
-  "time_mine": "20000"
+  "time_mine": "20000",
+
+  "homel_1": "http://localhost:8081",
+  "homel_2": "http://localhost:8082"
 }
