@@ -5,5 +5,9 @@
   "alg_signature": "rsa",
   "ec_curve_name": "ed25519",
   "hashing_function": "sha1",
-  "digital_signature_active": "yes"
+  "digital_signature_active": "yes",
+
+  "port": "8080",
+  "currentNodeUrl": "http://localhost:",
+  "blockChainActive": "yes"
 }

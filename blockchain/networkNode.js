@@ -5,8 +5,6 @@ const Blockchain = require("./blockchain");
 
 const config = require("config");
 const port = config.get("port");
-
-const request = require("request-promise");
 const axios = require('axios')
 
 const ledger = new Blockchain();
