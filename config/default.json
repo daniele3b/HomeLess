@@ -1,4 +1,9 @@
 {
-    "amqp_exchange" : "HomeLess-exchange",
-    "amqp_server" : "amqp://localhost"
+  "amqp_exchange": "HomeLess-exchange",
+  "amqp_server": "amqp://localhost",
+
+  "alg_signature": "rsa",
+  "ec_curve_name": "ed25519",
+  "hashing_function": "sha1",
+  "digital_signature_active": "yes"
 }
