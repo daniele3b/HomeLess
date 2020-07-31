@@ -45,7 +45,7 @@ router.post("/transaction/broadcast", (req, res) => {
       }
     };
 
-    requestPromises.push(axios(options));
+    requestPromises.push(axios(requestOptions));
   });
 
   Promise.all(requestPromises).then((data) => {
@@ -118,9 +118,7 @@ router.post("/register-and-broadcast-node", (req, res) => {
   
   // Register
   const newNodeUrl = req.body.newNodeUrl;
-  if (ledger.networkNodes.indexOf(newNodeUrl) != -1) return res.status(400).send("Node already registered")
-  
-  ledger.networkNodes.push(newNodeUrl);
+  if (ledger.networkNodes.indexOf(newNodeUrl) == -1) ledger.networkNodes.push(newNodeUrl);
 
   const regNodesPromises = [];
 
@@ -158,13 +156,10 @@ router.post("/register-and-broadcast-node", (req, res) => {
 // Register a node with the network
 router.post("/register-node", (req, res) => {
   const newNodeUrl = req.body.newNodeUrl;
-  const nodeAlreadyPresent = ledger.networkNodes.indexOf(newNodeUrl) != -1;
-  const currentNode = ledger.currentNodeUrl === newNodeUrl;
-  
-  if(nodeAlreadyPresent) return res.status(400).send("Node already registered")
-  if(currentNode) return res.status(400).send("This node is the current node")
-  
-  ledger.networkNodes.push(newNodeUrl);
+  const nodeNotAlreadyPresent = ledger.networkNodes.indexOf(newNodeUrl) == -1;
+  const notCurrentNode = ledger.currentNodeUrl !== newNodeUrl;
+
+  if(nodeNotAlreadyPresent && notCurrentNode) ledger.networkNodes.push(newNodeUrl);
   
   res.status(200).json({ note: "New node registered successfully." });
 });
@@ -174,13 +169,10 @@ router.post("/register-nodes-bulk", (req, res) => {
   const allNetworkNodes = req.body.allNetworkNodes;
   
   allNetworkNodes.forEach((networkNodeUrl) => {
-    const nodeAlreadyPresent = ledger.networkNodes.indexOf(networkNodeUrl) != -1;
-    const currentNode = ledger.currentNodeUrl === networkNodeUrl;
+    const nodeNotAlreadyPresent = ledger.networkNodes.indexOf(networkNodeUrl) == -1;
+    const notCurrentNode = ledger.currentNodeUrl !== networkNodeUrl;
    
-    if(nodeAlreadyPresent) return res.status(400).send("Node already present")
-    if(currentNode) return res.status(400).send("This node is the current node")
-    
-    ledger.networkNodes.push(networkNodeUrl);
+    if(nodeNotAlreadyPresent && notCurrentNode) ledger.networkNodes.push(networkNodeUrl);
   });
 
   res.status(200).json({ note: "Bulk registration successfull." });

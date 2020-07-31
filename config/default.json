@@ -9,5 +9,6 @@
 
   "port": "8080",
   "currentNodeUrl": "http://localhost:",
-  "blockChainActive": "yes"
+  "blockChainActive": "yes",
+  "time_mine": "20000"
 }
