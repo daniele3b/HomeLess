@@ -1,12 +1,11 @@
 var amqp = require("amqplib/callback_api");
 const config = require("config");
-const {encryptData} = require("../helper/encryptData")
-
+const { encryptData } = require("../helper/encryptData");
+const { cipherSym } = require("../helper/encryptSym");
 
 function sendInfoToOneServer(info) {
-
   // Getting publicKeys array
-  const {publicKeys} = require("../startup/getPublicKey")
+  const { publicKeys } = require("../startup/getPublicKey");
 
   amqp.connect(config.get("amqp_server"), function (error0, connection) {
     if (error0) {
@@ -53,10 +52,11 @@ function sendInfoToOneServer(info) {
           email: info.email,
         };
 
-        if(config.get("RSA_encrypted_active") == "yes"){
-            dataToSend = encryptData(dataToSend, publicKeys[0])
+        if (config.get("RSA_encrypted_active") == "yes") {
+          if (publicKeys[0] != "symmetric")
+            dataToSend = encryptData(dataToSend, publicKeys[0]);
+          else dataToSend = cipherSym(dataToSend);
         }
-
       }
 
       channel.assertExchange(exchange, "direct", {
