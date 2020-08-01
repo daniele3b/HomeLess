@@ -7,6 +7,10 @@
   "hashing_function": "sha1",
   "digital_signature_active": "yes",
 
+  "RSA_encrypted_active": "yes",
+
+  "numberOfServices": "2",
+
   "port": "8080",
   "currentNodeUrl": "http://localhost:",
   "blockChainActive": "yes",

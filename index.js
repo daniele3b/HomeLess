@@ -2,8 +2,13 @@ const express = require("express");
 const app = express();
 var cors = require("cors");
 const config = require("config")
+const {getPublicKeys} = require("./startup/getPublicKey") 
 
 app.use(cors());
+
+if(config.get("RSA_encrypted_active") == "yes"){
+    getPublicKeys()
+}
 
 
 if (config.get("blockChainActive") == "yes") {
