@@ -28,5 +28,9 @@ After installing, you have to follow these instructions:
 * randomstring
 * replace-in-file
 
+# Others repositories
+
+* [Homel_1](https://github.com/daniele3b/HomeL1)
+* [Homel_2](https://github.com/daniele3b/HomeL2)
 
 
