@@ -3,6 +3,7 @@ const config = require("config");
 const { encryptData } = require("../helper/encryptData");
 const { cipherSym } = require("../helper/encryptSym");
 const axios = require("axios")
+require("dotenv").config()
 
 function sendInfoToOneServer(info) {
   // Getting publicKeys array
@@ -56,12 +57,22 @@ function sendInfoToOneServer(info) {
           if (config.get("RSA_encrypted_active") == "yes") {
 
             if(publicKeys[0] == "NA"){
+              // If public key is not available because service was down => switch to symmetric key
+              console.log("SWITCHED TO SYMMETRIC KEY AFTER PUB KEY NA")
               publicKeys[0] = "symmetric"
+              dataToSend = cipherSym(dataToSend);
             }
 
-            if (publicKeys[0] != "symmetric")
+            else if (publicKeys[0] != "symmetric" && publicKeys[0] != "NA"){
+              console.log("ASYMMETRIC KEY")
+              // If we have public key AND NO REQUESTS WAS MADE WHEN SERVICE WAS DOWN => use asymmetric key
               dataToSend = encryptData(dataToSend, publicKeys[0]);
-            else dataToSend = cipherSym(dataToSend);
+            }
+              
+            else{
+              console.log("SYMMETRIC KEY")
+              dataToSend = cipherSym(dataToSend);
+            } 
           }
         
 

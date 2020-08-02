@@ -28,13 +28,17 @@ router.post("/service2", async (req, res) => {
 
   axios(options)
   .then(response => {
+    // Getting publicKeys array
+    const { publicKeys } = require("../startup/getPublicKey");
+    
+    if(response.data.encoding == "symmetric") publicKeys[0] = "symmetric"
+
     sendInfoToOneServer(objToSend);
     res.send(objToSend);
   })
   .catch(err => {
       // Getting publicKeys array
       const { publicKeys } = require("../startup/getPublicKey");
-      console.log(publicKeys[0])
       
       console.log(config.get("homel_2")+" is offline!")
 
