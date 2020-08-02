@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const { sendInfoToOneServer } = require("../amqp/producer.js");
-const axios = require("axios")
-const config = require("config")
+const axios = require("axios");
+const config = require("config");
 
 router.post("/service2", async (req, res) => {
   var data = new Date();
@@ -21,31 +21,36 @@ router.post("/service2", async (req, res) => {
     service: "2",
   };
 
-  const options = {
-    url: config.get("homel_2")+"/getStatusServer",
-    method: "get"
-  }
+  if (config.get("RSA_encrypted_active") == "yes") {
+    const options = {
+      url: config.get("homel_2") + "/getStatusServer",
+      method: "get",
+    };
 
-  axios(options)
-  .then(response => {
-    // Getting publicKeys array
-    const { publicKeys } = require("../startup/getPublicKey");
-    
-    if(response.data.encoding == "symmetric") publicKeys[0] = "symmetric"
+    axios(options)
+      .then((response) => {
+        // Getting publicKeys array
+        const { publicKeys } = require("../startup/getPublicKey");
 
+        if (response.data.encoding == "symmetric") publicKeys[0] = "symmetric";
+
+        sendInfoToOneServer(objToSend);
+        res.send(objToSend);
+      })
+      .catch((err) => {
+        // Getting publicKeys array
+        const { publicKeys } = require("../startup/getPublicKey");
+
+        console.log(config.get("homel_2") + " is offline!");
+
+        publicKeys[0] = "NA";
+
+        res.status(404).send(config.get("homel_2") + " is offline!");
+      });
+  } else {
     sendInfoToOneServer(objToSend);
     res.send(objToSend);
-  })
-  .catch(err => {
-      // Getting publicKeys array
-      const { publicKeys } = require("../startup/getPublicKey");
-      
-      console.log(config.get("homel_2")+" is offline!")
-
-      publicKeys[0] = "NA"
-
-      res.status(404).send(config.get("homel_2")+" is offline!")
-  })
+  }
 });
 
 module.exports = router;
