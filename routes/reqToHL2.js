@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const { sendInfoToOneServer } = require("../amqp/producer.js");
+const axios = require("axios")
+const config = require("config")
 
 router.post("/service2", async (req, res) => {
   var data = new Date();
@@ -19,9 +21,27 @@ router.post("/service2", async (req, res) => {
     service: "2",
   };
 
-  sendInfoToOneServer(objToSend);
+  const options = {
+    url: config.get("homel_2")+"/getStatusServer",
+    method: "get"
+  }
 
-  res.send(objToSend);
+  axios(options)
+  .then(response => {
+    sendInfoToOneServer(objToSend);
+    res.send(objToSend);
+  })
+  .catch(err => {
+      // Getting publicKeys array
+      const { publicKeys } = require("../startup/getPublicKey");
+      console.log(publicKeys[0])
+      
+      console.log(config.get("homel_2")+" is offline!")
+
+      publicKeys[0] = "NA"
+
+      res.status(404).send(config.get("homel_2")+" is offline!")
+  })
 });
 
 module.exports = router;

@@ -2,6 +2,7 @@ var amqp = require("amqplib/callback_api");
 const config = require("config");
 const { encryptData } = require("../helper/encryptData");
 const { cipherSym } = require("../helper/encryptSym");
+const axios = require("axios")
 
 function sendInfoToOneServer(info) {
   // Getting publicKeys array
@@ -52,24 +53,34 @@ function sendInfoToOneServer(info) {
           email: info.email,
         };
 
-        if (config.get("RSA_encrypted_active") == "yes") {
-          if (publicKeys[0] != "symmetric")
-            dataToSend = encryptData(dataToSend, publicKeys[0]);
-          else dataToSend = cipherSym(dataToSend);
-        }
+          if (config.get("RSA_encrypted_active") == "yes") {
+
+            if(publicKeys[0] == "NA"){
+              publicKeys[0] = "symmetric"
+            }
+
+            if (publicKeys[0] != "symmetric")
+              dataToSend = encryptData(dataToSend, publicKeys[0]);
+            else dataToSend = cipherSym(dataToSend);
+          }
+        
+
+        
       }
+        
+        channel.assertExchange(exchange, "direct", {
+          durable: false,
+        });
+  
+        channel.publish(
+          exchange,
+          service,
+          Buffer.from(JSON.stringify(dataToSend))
+        );
+  
+        console.log("Info sent to service " + service);
 
-      channel.assertExchange(exchange, "direct", {
-        durable: false,
-      });
-
-      channel.publish(
-        exchange,
-        service,
-        Buffer.from(JSON.stringify(dataToSend))
-      );
-
-      console.log("Info sent to service " + service);
+      
     });
 
     setTimeout(function () {
