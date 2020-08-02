@@ -2,8 +2,8 @@ var amqp = require("amqplib/callback_api");
 const config = require("config");
 const { encryptData } = require("../helper/encryptData");
 const { cipherSym } = require("../helper/encryptSym");
-const axios = require("axios")
-require("dotenv").config()
+const axios = require("axios");
+require("dotenv").config();
 
 function sendInfoToOneServer(info) {
   // Getting publicKeys array
@@ -54,44 +54,34 @@ function sendInfoToOneServer(info) {
           email: info.email,
         };
 
-          if (config.get("RSA_encrypted_active") == "yes") {
-
-            if(publicKeys[0] == "NA"){
-              // If public key is not available because service was down => switch to symmetric key
-              console.log("SWITCHED TO SYMMETRIC KEY AFTER PUB KEY NA")
-              publicKeys[0] = "symmetric"
-              dataToSend = cipherSym(dataToSend);
-            }
-
-            else if (publicKeys[0] != "symmetric" && publicKeys[0] != "NA"){
-              console.log("ASYMMETRIC KEY")
-              // If we have public key AND NO REQUESTS WAS MADE WHEN SERVICE WAS DOWN => use asymmetric key
-              dataToSend = encryptData(dataToSend, publicKeys[0]);
-            }
-              
-            else{
-              console.log("SYMMETRIC KEY")
-              dataToSend = cipherSym(dataToSend);
-            } 
+        if (config.get("security_active") == "yes") {
+          if (publicKeys[0] == "NA") {
+            // If public key is not available because service was down => switch to symmetric key
+            console.log("SWITCHED TO SYMMETRIC KEY AFTER PUB KEY NA");
+            publicKeys[0] = "symmetric";
+            dataToSend = cipherSym(dataToSend);
+          } else if (publicKeys[0] != "symmetric" && publicKeys[0] != "NA") {
+            console.log("ASYMMETRIC KEY");
+            // If we have public key AND NO REQUESTS WAS MADE WHEN SERVICE WAS DOWN => use asymmetric key
+            dataToSend = encryptData(dataToSend, publicKeys[0]);
+          } else {
+            console.log("SYMMETRIC KEY");
+            dataToSend = cipherSym(dataToSend);
           }
-        
-
-        
+        }
       }
-        
-        channel.assertExchange(exchange, "direct", {
-          durable: false,
-        });
-  
-        channel.publish(
-          exchange,
-          service,
-          Buffer.from(JSON.stringify(dataToSend))
-        );
-  
-        console.log("Info sent to service " + service);
 
-      
+      channel.assertExchange(exchange, "direct", {
+        durable: false,
+      });
+
+      channel.publish(
+        exchange,
+        service,
+        Buffer.from(JSON.stringify(dataToSend))
+      );
+
+      console.log("Info sent to service " + service);
     });
 
     setTimeout(function () {

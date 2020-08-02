@@ -7,7 +7,7 @@
   "hashing_function": "sha1",
   "digital_signature_active": "yes",
 
-  "RSA_encrypted_active": "yes",
+  "security_active": "yes",
   "algorithm_cipher": "aes-192-cbc",
 
   "numberOfServices": "2",

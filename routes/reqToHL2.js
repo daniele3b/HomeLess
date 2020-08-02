@@ -21,7 +21,7 @@ router.post("/service2", async (req, res) => {
     service: "2",
   };
 
-  if (config.get("RSA_encrypted_active") == "yes") {
+  if (config.get("security_active") == "yes") {
     const options = {
       url: config.get("homel_2") + "/getStatusServer",
       method: "get",
