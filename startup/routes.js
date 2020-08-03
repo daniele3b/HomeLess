@@ -1,5 +1,6 @@
 const reqToHL1 = require("../routes/reqToHL1");
 const reqToHL2 = require("../routes/reqToHL2");
+const reqToHL3 = require("../routes/reqToHL3");
 const homePage = require("../routes/homePage");
 const bodyParser = require("body-parser");
 const Blockchain = require("../blockchain/networkNode");
@@ -16,5 +17,6 @@ module.exports = function (app) {
   if (config.get("blockChainActive") == "yes") {
     app.use("/", Blockchain);
     app.use("/", verify);
+    app.use("/", reqToHL3);
   }
 };

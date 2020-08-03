@@ -9,6 +9,7 @@ var ec = new EC(config.get("ec_curve_name"));
 // function used to verify signature
 function verifyHash(publicKey, file, signature) {
   const doc = fs.readFileSync(file);
+
   var shaMsgF = crypto
     .createHash(config.get("hashing_function"))
     .update(doc)
