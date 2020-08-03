@@ -29,6 +29,11 @@ After installing, you have to follow these instructions:
 * replace-in-file
 * cryptr
 * multer
+* jest
+* supertest
+
+# Tests
+To run the tests you need to run **npm test** and all the test suites will be performed (both integration and unit)
 
 # Others repositories
 
