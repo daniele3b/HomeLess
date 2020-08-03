@@ -5,8 +5,8 @@ describe("createNewBlock", () => {
     let ledger = new Blockchain();
 
     beforeEach( () => {
-        ledger.pendingTransactions.push("First transaction...")
-        ledger.pendingTransactions.push("Second transaction...")
+        ledger.pendingTransactions.push("First transaction")
+        ledger.pendingTransactions.push("Second transaction")
     })
 
     it("should create a new block", () => {
@@ -26,8 +26,8 @@ describe("createNewBlock", () => {
         expect(newBlockHash).toBe("hash")
         expect(prevHash).toBe("prevHash")
         expect(newBlockIndex).toBe(newLength)
-        expect(newBlockTransactions[0]).toBe("First transaction...")
-        expect(newBlockTransactions[1]).toBe("Second transaction...")
+        expect(newBlockTransactions[0]).toBe("First transaction")
+        expect(newBlockTransactions[1]).toBe("Second transaction")
         expect(newBlockTransactions.length).toBe(2)
         expect(ledger.pendingTransactions.length).toBe(0)
     }) 
@@ -69,15 +69,15 @@ describe("addTransactionToPendingTransactions", () => {
     let ledger = new Blockchain();
 
     beforeEach( () => {
-        ledger.pendingTransactions.push("First transaction...")
-        ledger.pendingTransactions.push("Second transaction...")
+        ledger.pendingTransactions.push("First transaction")
+        ledger.pendingTransactions.push("Second transaction")
     })
 
     it("should return the last block of the chain", () => {
 
         const oldPendingTransactionsLength = ledger.pendingTransactions.length
         
-        const index = ledger.addTransactionToPendingTransactions("Third transaction...")
+        const index = ledger.addTransactionToPendingTransactions("Third transaction")
 
         const newPendingTransactionsLength = ledger.pendingTransactions.length
 
