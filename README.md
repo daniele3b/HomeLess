@@ -33,7 +33,7 @@ After installing, you have to follow these instructions:
 * supertest
 
 # Tests
-To run the tests you need to run **npm tests** all the test suites will be performed (both integration and unit)
+To run the tests you need to run **npm test** all the test suites will be performed (both integration and unit)
 
 # Others repositories
 
