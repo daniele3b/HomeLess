@@ -10,7 +10,7 @@ function Blockchain() {
   this.currentNodeUrl = currentNodeUrl;
   this.networkNodes = [config.get('homel_2')];
 
-  this.createNewBlock(0, "0", "0"); // Genesis Block
+  this.createNewBlock("0", "0"); // Genesis Block
 }
 
 Blockchain.prototype.createNewBlock = function (previousBlockHash, hash) {

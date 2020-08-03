@@ -22,9 +22,11 @@
     "sha256": "^0.2.0",
     "uuid": "^8.3.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "jest": "^26.2.2"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest  --verbose --watchAll --maxWorkers=1"
   },
   "repository": {
     "type": "git",
