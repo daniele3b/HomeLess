@@ -28,6 +28,7 @@ After installing, you have to follow these instructions:
 * randomstring
 * replace-in-file
 * cryptr
+* multer
 
 # Others repositories
 
