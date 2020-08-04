@@ -34,7 +34,16 @@ describe('/networkNode', () => {
         const newBlock = {
             index: 2,
             timestamp: Date.now(),
-            transactions: ["new transaction"],
+            transactions: [{
+                userData: {
+                    name: "Ivan",
+                    surname: "Giacomoni",
+                    id: '2'
+                },
+                signature: "signature",
+                publicKey: "publicKey",
+                transactionId: "A7SYFxd67acr6FCVf"
+            }],
             hash: "wfwfscffscsf", 
             previousBlockHash: "0",
         };
@@ -51,7 +60,16 @@ describe('/networkNode', () => {
         const newBlock = {
             index: 3,
             timestamp: Date.now(),
-            transactions: ["new transaction"],
+            transactions: [{
+                userData: {
+                    name: "Ivan",
+                    surname: "Giacomoni",
+                    id: '2'
+                },
+                signature: "signature",
+                publicKey: "publicKey",
+                transactionId: "A7SYFxd67acr6FCVf"
+            }],
             hash: "wfwfscffscsf", 
             previousBlockHash: "0",
         };
@@ -68,7 +86,16 @@ describe('/networkNode', () => {
         const newBlock = {
             index: 2,
             timestamp: Date.now(),
-            transactions: ["new transaction"],
+            transactions: [{
+                userData: {
+                    name: "Ivan",
+                    surname: "Giacomoni",
+                    id: '2'
+                },
+                signature: "signature",
+                publicKey: "publicKey",
+                transactionId: "A7SYFxd67acr6FCVf"
+            }],
             hash: "wfwfscffscsf", 
             previousBlockHash: "invalid previous block hash",
         };
@@ -93,32 +120,51 @@ describe('/networkNode', () => {
         
         const pdfId = '1'
 
+        const newTransaction = {
+            userData: {
+                name: "Ivan",
+                surname: "Giacomoni",
+                id: pdfId
+            },
+            signature: "signature",
+            publicKey: "publicKey",
+            transactionId: "A7SYFxd67acr6FCVf"
+        }
+
         let res = await request(server)
                 .post('/transaction')
                 .send({
-                    newTransaction: {
-                        userData: {
-                            name: "Ivan",
-                            surname: "Giacomoni",
-                            id: pdfId
-                        },
-                        signature: "signature",
-                        publicKey: "publicKey",
-                        transactionId: "A7SYFxd67acr6FCVf"
-                    }
+                    newTransaction: newTransaction
                 })
+
+        const newBlock = {
+            index: 3,
+            timestamp: Date.now(),
+            transactions: [newTransaction],
+            hash: "afwgetwgwegegg", 
+            previousBlockHash: "wfwfscffscsf"
+        };
+
         res = await request(server)
-        .get('/blockchain')
-        
-        //sconsole.log(res.body.chain)
-        const url = '/getTransaction/:'+pdfId
-        //console.log(url)
+                .post('/receive-new-block')
+                .send({newBlock: newBlock})
         
         res = await request(server)
-                .get(url)
+                .get('/getTransaction/'+pdfId)
         
     
         expect(res.status).toBe(200)
+    })
+
+    it("should return 404 if no transaction with the given pdfId is found in the chain", async () => {
+        
+        const pdfId = '10'
+
+        res = await request(server)
+                .get('/getTransaction/'+pdfId)
+        
+    
+        expect(res.status).toBe(404)
     })
     
 })
