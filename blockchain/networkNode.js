@@ -16,6 +16,24 @@ router.get("/blockchain", (req, res) => {
   res.status(200).send(ledger);
 });
 
+router.get("/blockchain/:nodePort", (req, res) => {
+  const nodeUrl = config.get("currentNodeUrl") + req.params.nodePort
+
+  const options = {
+    url: nodeUrl + "/blockchain",
+    method: "get"
+  }
+
+  axios(options)
+  .then(response => {
+    const led = response.data
+    res.status(200).send(led)
+  })
+  .catch(err => {
+    res.status(404).send("Service offline")
+  })
+});
+
 router.post("/transaction", (req, res) => {
   const newTransaction = req.body.newTransaction;
 

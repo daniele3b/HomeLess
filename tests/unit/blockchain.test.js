@@ -55,7 +55,7 @@ describe("createNewTransaction", () => {
 
     let ledger = new Blockchain();
 
-    it("should return the last block of the chain", () => {
+    it("should create a new transaction and return it", () => {
         const newTransaction = ledger.createNewTransaction("userData", "signature", "publicKey")
 
         expect(newTransaction.userData).toBe("userData")
@@ -73,7 +73,7 @@ describe("addTransactionToPendingTransactions", () => {
         ledger.pendingTransactions.push("Second transaction")
     })
 
-    it("should return the last block of the chain", () => {
+    it("should add a transaction to the pendingTransaction array and return the index of the block which will take it", () => {
 
         const oldPendingTransactionsLength = ledger.pendingTransactions.length
         
