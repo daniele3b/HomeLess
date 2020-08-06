@@ -27,7 +27,7 @@ router.post("/en/service1", async (req, res) => {
   res.send(objToSend);
 });
 
-router.post("/it/service1", async (req, res) => {
+router.post("/it/service1", async (req, res) => {console.log("sub");
   var data = new Date();
   var gg, mm, aaaa;
   gg = data.getDate() + "/";
