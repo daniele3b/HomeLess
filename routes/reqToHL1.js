@@ -9,11 +9,17 @@ router.post("/en/service1", async (req, res) => {
   mm = data.getMonth() + 1 + "/";
   aaaa = data.getFullYear();
 
+  const birthday = req.body.birthday.split("-")
+  const birthday_day = birthday[2]
+  const birthday_month = birthday[1]
+  const birthday_year = birthday[0]
+  
+
   var objToSend = {
     name: req.body.name,
     surname: req.body.surname,
     email: req.body.email,
-    birthday: req.body.day + "/" + req.body.month + "/" + req.body.year,
+    birthday: birthday_day + "/" + birthday_month + "/" + birthday_year,
     day: gg + mm + aaaa,
     street: req.body.street,
     city: req.body.city,
