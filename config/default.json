@@ -6,6 +6,7 @@
   "ec_curve_name": "ed25519",
   "hashing_function": "sha1",
   "digital_signature_active": "yes",
+  "digital_signature_alg": "RSA",
 
   "security_active": "yes",
   "algorithm_cipher": "aes-192-cbc",
