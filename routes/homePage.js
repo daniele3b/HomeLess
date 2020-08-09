@@ -49,4 +49,13 @@ router.get("/en/messageVerifyDocumentError", async (req, res) => {
 router.get("/it/messageVerifyDocumentError", async (req, res) => {
   res.sendFile(path.join(__dirname, "../views/it", "messageVerifyDocumentError.html"));
 });
+
+router.get("/en/messageVerifyDocumentSuccess", async (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/en", "messageVerifyDocumentSuccess.html"));
+});
+
+router.get("/it/messageVerifyDocumentSuccess", async (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/it", "messageVerifyDocumentSuccess.html"));
+});
+
 module.exports = router;
