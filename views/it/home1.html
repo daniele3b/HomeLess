@@ -8,6 +8,16 @@
           alert("Devi accettare le condizioni di servizio");
           return false;
         }
+
+        const email = document.form.email.value
+        const regex = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/;
+        const validEmail = regex.test(email)
+        
+        if(!validEmail){
+          alert("Email non valida.")
+          return false
+        }
+
         alert(
           "Stiamo elaborando la tua richiesta. Riceverai presto una mail con il tuo documento!"
         );
