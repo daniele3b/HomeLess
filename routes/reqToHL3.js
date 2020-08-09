@@ -35,7 +35,7 @@ router.post("/en/service3", upload.single("file"), async (req, res, next) => {
   axios(options)
     .then((val) => {
       deletePdf("./uploads/" + file.originalname);
-      res.status(200).send("Document verified!");
+      res.redirect(config.get("currentNodeUrl") + config.get("port") +'/en/messageVerifyDocumentSuccess')
     })
     .catch((err) => {
       deletePdf("./uploads/" + file.originalname);
@@ -62,7 +62,7 @@ router.post("/it/service3", upload.single("file"), async (req, res, next) => {
   axios(options)
     .then((val) => {
       deletePdf("./uploads/" + file.originalname);
-      res.status(200).send("Document verified!");
+      res.redirect(config.get("currentNodeUrl") + config.get("port") +'/it/messageVerifyDocumentSuccess')
     })
     .catch((err) => {
       deletePdf("./uploads/" + file.originalname);
