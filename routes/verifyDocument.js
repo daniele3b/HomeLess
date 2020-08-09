@@ -32,10 +32,10 @@ router.post("/verifyDocument", async (req, res) => {
         if (verifyHash(key, path, signature))
           res.status(200).send("Pdf is valid!");
         else res.status(400).send("Pdf is not valid!");
-      } else if (config.get("digital_signature_alg") == "RSA") {
-        console.log(publicKey);
-        if (verifyHashRSA(publicKey, path, signature))
-          res.status(200).send("Pdf is valid!");
+      }
+      if (config.get("digital_signature_alg") == "RSA") {
+        const result = verifyHashRSA(publicKey, path, signature);
+        if (result == true) res.status(200).send("Pdf is valid!");
         else res.status(400).send("Pdf is not valid!");
       }
     })
