@@ -21,7 +21,7 @@ function sendInfoToOneServer(info) {
 
       const service = info.service;
 
-      let dataToSend = {};
+      let dataToSend = {}; 
 
       if (service == "1") {
         const day = info.day.split("/");
@@ -40,6 +40,7 @@ function sendInfoToOneServer(info) {
           cap: info.cap,
           to: info.to,
           email: info.email,
+          lang: info.lang
         };
       } else if (service == "2") {
         const day = info.day.split("/");
@@ -52,6 +53,7 @@ function sendInfoToOneServer(info) {
           street: info.street,
           cash: info.cash,
           email: info.email,
+          lang: info.lang
         };
 
         if (config.get("security_active") == "yes") {

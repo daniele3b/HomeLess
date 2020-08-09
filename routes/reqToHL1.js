@@ -26,6 +26,7 @@ router.post("/en/service1", async (req, res) => {
     cap: req.body.cap,
     to: req.body.to,
     service: "1",
+    lang: "eng"
   };
 
   sendInfoToOneServer(objToSend);
@@ -56,6 +57,7 @@ router.post("/it/service1", async (req, res) => {console.log("sub");
     cap: req.body.cap,
     to: req.body.to,
     service: "1",
+    lang: "ita"
   };
 
   sendInfoToOneServer(objToSend);

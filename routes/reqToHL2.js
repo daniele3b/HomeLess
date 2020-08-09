@@ -19,6 +19,7 @@ router.post("/en/service2", async (req, res) => {
     street: req.body.street,
     cash: req.body.cash,
     service: "2",
+    lang: "eng"
   };
 
   if (config.get("security_active") == "yes") {
@@ -68,6 +69,7 @@ router.post("/it/service2", async (req, res) => {
     street: req.body.street,
     cash: req.body.cash,
     service: "2",
+    lang: "ita"
   };
 
   if (config.get("security_active") == "yes") {
