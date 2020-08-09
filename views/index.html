@@ -10,13 +10,35 @@
       integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
       crossorigin="anonymous"
     />
+    
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"> 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.1.0/css/flag-icon.min.css" rel="stylesheet">
+    
   </head>
   <body>
-    <font face="Comic sans MS" size="7">
-      <span class="testo"> HomeLess</span> <br />
-    </font>
-    <a href="/en">Lingua Inglese</a> <br />
-    <a href="/it">Lingua Italiana</a>
+   
+    <div class="container">
+      <div class="row">
+      <div class="col-sm-2 col-md-2"></div>
+      <div class="col-sm-8 col-md-8">
+        <div class="card">
+          <h5 class="card-header" style="background-color: black;border:0px;">
+            <font face="Comic sans MS" size="7">
+            <span class="testo" style="color:#fdc513 ;"> HomeLess</span> <br />
+          </font></h5>
+          <div class="card-body" style="background-color:#fff7e0; text-align: center;">
+            <h5 class="card-title"><font face="Comic sans MS" size="5">Breve descrizione</font></h5>
+            <p class="card-text">Seleziona la tua lingua e procedi!</p>
+              <a href="/en"><span class="flag-icon flag-icon-gb"> </span></a> 
+              <a href="/it"><span class="flag-icon flag-icon-it"></span></a>
+            
+            
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-2 col-md-2"></div>
+    </div>
+    </div>
 
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
@@ -40,5 +62,6 @@
   body {
     background-color: #fdc513;
     text-align: center;
+    padding-top: 50px;
   }
 </style>
