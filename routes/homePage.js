@@ -42,6 +42,14 @@ router.get("/en/messageSendingSuccess", async (req, res) => {
   res.sendFile(path.join(__dirname, "../views/en", "messageSendingSuccess.html"));
 });
 
+router.get("/it/messageSendingError", async (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/it", "messageSendingError.html"));
+});
+
+router.get("/en/messageSendingError", async (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/en", "messageSendingError.html"));
+});
+
 router.get("/en/messageVerifyDocumentError", async (req, res) => {
   res.sendFile(path.join(__dirname, "../views/en", "messageVerifyDocumentError.html"));
 });
