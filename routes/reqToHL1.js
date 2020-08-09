@@ -35,7 +35,7 @@ router.post("/en/service1", async (req, res) => {
   res.redirect(config.get("currentNodeUrl") + config.get("port") +'/en/messageSendingSuccess')
 });
 
-router.post("/it/service1", async (req, res) => {console.log("sub");
+router.post("/it/service1", async (req, res) => {
   var data = new Date();
   var gg, mm, aaaa;
   gg = data.getDate() + "/";
