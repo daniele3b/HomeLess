@@ -18,7 +18,8 @@ router.post("/en/service1", async (req, res) => {
     gg = data.getDate() + "/";
     mm = data.getMonth() + 1 + "/";
     aaaa = data.getFullYear();
-  
+    
+    
     const birthday = req.body.birthday.split("-")
     const birthday_day = birthday[2]
     const birthday_month = birthday[1]
