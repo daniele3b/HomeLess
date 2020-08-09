@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { sendInfoToOneServer } = require("../amqp/producer.js");
+const config = require("config")
 
 router.post("/en/service1", async (req, res) => {
   var data = new Date();
@@ -31,7 +32,7 @@ router.post("/en/service1", async (req, res) => {
 
   sendInfoToOneServer(objToSend);
 
-  res.send(objToSend);
+  res.redirect(config.get("currentNodeUrl") + config.get("port") +'/en/messageSuccess')
 });
 
 router.post("/it/service1", async (req, res) => {console.log("sub");
@@ -62,7 +63,7 @@ router.post("/it/service1", async (req, res) => {console.log("sub");
 
   sendInfoToOneServer(objToSend);
 
-  res.send(objToSend);
+  res.redirect(config.get("currentNodeUrl") + config.get("port") +'/it/messageSuccess')
 });
 
 module.exports = router;
