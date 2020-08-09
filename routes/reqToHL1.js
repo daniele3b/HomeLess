@@ -32,7 +32,7 @@ router.post("/en/service1", async (req, res) => {
 
   sendInfoToOneServer(objToSend);
 
-  res.redirect(config.get("currentNodeUrl") + config.get("port") +'/en/messageSuccess')
+  res.redirect(config.get("currentNodeUrl") + config.get("port") +'/en/messageSendingSuccess')
 });
 
 router.post("/it/service1", async (req, res) => {console.log("sub");
@@ -63,7 +63,7 @@ router.post("/it/service1", async (req, res) => {console.log("sub");
 
   sendInfoToOneServer(objToSend);
 
-  res.redirect(config.get("currentNodeUrl") + config.get("port") +'/it/messageSuccess')
+  res.redirect(config.get("currentNodeUrl") + config.get("port") +'/it/messageSendingSuccess')
 });
 
 module.exports = router;

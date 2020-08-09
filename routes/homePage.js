@@ -34,12 +34,12 @@ router.get("/it/service3", async (req, res) => {
   res.sendFile(path.join(__dirname, "../views/it", "home3.html"));
 });
 
-router.get("/it/messageSuccess", async (req, res) => {
-  res.sendFile(path.join(__dirname, "../views/it", "messageSuccess.html"));
+router.get("/it/messageSendingSuccess", async (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/it", "messageSendingSuccess.html"));
 });
 
-router.get("/en/messageSuccess", async (req, res) => {
-  res.sendFile(path.join(__dirname, "../views/en", "messageSuccess.html"));
+router.get("/en/messageSendingSuccess", async (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/en", "messageSendingSuccess.html"));
 });
 
 module.exports = router;
