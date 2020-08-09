@@ -39,7 +39,7 @@ router.post("/en/service3", upload.single("file"), async (req, res, next) => {
     })
     .catch((err) => {
       deletePdf("./uploads/" + file.originalname);
-      res.status(400).send("Document not verified!");
+      res.redirect(config.get("currentNodeUrl") + config.get("port") +'/en/messageVerifyDocumentError')
     });
 });
 
@@ -66,7 +66,7 @@ router.post("/it/service3", upload.single("file"), async (req, res, next) => {
     })
     .catch((err) => {
       deletePdf("./uploads/" + file.originalname);
-      res.status(400).send("Document not verified!");
+      res.redirect(config.get("currentNodeUrl") + config.get("port") +'/it/messageVerifyDocumentError')
     });
 });
 
