@@ -7,6 +7,16 @@
                     alert('Devi accettare le condizioni di servizio');
                     return false;
                 }
+
+                const email = document.form.email.value
+                const regex = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/;
+                const validEmail = regex.test(email)
+        
+                if(!validEmail){
+                    alert("Email non valida.")
+                    return false
+                }
+
                 alert('We are elaborating your request. You will soon receive an email with your document!')
             }
         
@@ -100,7 +110,7 @@
                                       class="inserimento"
                                       name="cash"
                                       size="30"
-                                      placeholder="Inserisci il tuo cap"
+                                      placeholder="Inserisci il tuo importo"
                                       required
                                     />
                                   </td>
