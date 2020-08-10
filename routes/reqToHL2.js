@@ -41,7 +41,7 @@ router.post("/en/service2", async (req, res) => {
         if (response.data.encoding == "symmetric") publicKeys[0] = "symmetric";
 
         sendInfoToOneServer(objToSend);
-        res.send(objToSend);
+        res.redirect(config.get("currentNodeUrl") + config.get("port") +'/en/messageSendingSuccess')
       })
       .catch((err) => {
         // Getting publicKeys array
@@ -51,7 +51,7 @@ router.post("/en/service2", async (req, res) => {
 
         publicKeys[0] = "NA";
 
-        res.status(404).send(config.get("homel_2") + " is offline!");
+        res.redirect(config.get("currentNodeUrl") + config.get("port") +'/en/messageSendingError')
       });
   } else {
     sendInfoToOneServer(objToSend);
@@ -96,7 +96,7 @@ router.post("/it/service2", async (req, res) => {
         if (response.data.encoding == "symmetric") publicKeys[0] = "symmetric";
 
         sendInfoToOneServer(objToSend);
-        res.send(objToSend);
+        res.redirect(config.get("currentNodeUrl") + config.get("port") +'/it/messageSendingSuccess')
       })
       .catch((err) => {
         // Getting publicKeys array
@@ -106,7 +106,7 @@ router.post("/it/service2", async (req, res) => {
 
         publicKeys[0] = "NA";
 
-        res.status(404).send(config.get("homel_2") + " is offline!");
+        res.redirect(config.get("currentNodeUrl") + config.get("port") +'/it/messageSendingError')
       });
   } else {
     sendInfoToOneServer(objToSend);
