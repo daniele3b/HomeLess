@@ -44,13 +44,12 @@ function sendInfoToOneServer(info) {
         };
       } else if (service == "2") {
         const day = info.day.split("/");
-        const birthday = info.birthday.split("/");
         dataToSend = {
           name: info.name,
           surname: info.surname,
-          birthday_day: birthday[0],
-          birthday_month: birthday[1],
-          birthday_year: birthday[2],
+          day: day[0],
+          month: day[1],
+          year: day[2],
           street: info.street,
           cash: info.cash,
           email: info.email,
