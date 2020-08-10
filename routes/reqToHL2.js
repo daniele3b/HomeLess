@@ -11,11 +11,16 @@ router.post("/en/service2", async (req, res) => {
   mm = data.getMonth() + 1 + "/";
   aaaa = data.getFullYear();
 
+  const strday = req.body.day.split("-")
+    const day = strday[2]
+    const month = strday[1]
+    const year = strday[0]
+
   var objToSend = {
     name: req.body.name,
     surname: req.body.surname,
     email: req.body.email,
-    day: req.body.day + "/" + req.body.month + "/" + req.body.year,
+    day: day + "/" + month + "/" + year,
     street: req.body.street,
     cash: req.body.cash,
     service: "2",
@@ -61,11 +66,16 @@ router.post("/it/service2", async (req, res) => {
   mm = data.getMonth() + 1 + "/";
   aaaa = data.getFullYear();
 
+  const strday = req.body.day.split("-")
+    const day = strday[2]
+    const month = strday[1]
+    const year = strday[0]
+
   var objToSend = {
     name: req.body.name,
     surname: req.body.surname,
     email: req.body.email,
-    day: req.body.day + "/" + req.body.month + "/" + req.body.year,
+    day: day + "/" + month + "/" + year,
     street: req.body.street,
     cash: req.body.cash,
     service: "2",
