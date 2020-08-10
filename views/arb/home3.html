@@ -1,0 +1,89 @@
+<html>
+  <head>
+    <title>التحقق من الوثيقة</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+      crossorigin="anonymous"
+    />
+  </head>
+
+  <body>
+    <div class="container-fluid">
+      <div class="container">
+        <div class="row mt-2">
+          <a href="/arb" id="back"> <- العودة إلى الخدمات المتاحة</a>
+        </div>
+        <center>
+          <div class="row mt-3">
+            <div class="col">
+              <div class="card">
+                <h1 class="card-title mt-3">التحقق من الوثيقة</h1>
+                <p>
+                    في حقل تعريف pdf ، أدخل الرمز الذي تم استلامه عبر البريد الإلكتروني عندما طلبت الخدمة.<br />
+                    في حقل pdf ، قم بتحميل الملف المستلم عبر البريد الإلكتروني.<br />
+                    ستتحقق الخدمة مما إذا كان المستند أصليًا أو تم تغييره
+                </p>
+                <hr />
+                <div class="card-body">
+                  <form method="post" enctype="multipart/form-data" name="form">
+                    <div class="row">
+                      <div class="col">
+                        <h5><b>معرف الملف</b></h5>
+
+                        <input type="text" name="pdf_id" size="30" />
+                      </div>
+                    </div>
+                    <div class="row mt-2">
+                      <div class="col">
+                        <h5><b>ملف</b></h5>
+
+                        <input type="file" name="file" />
+                      </div>
+                    </div>
+                    <input
+                      class="mt-3"
+                      type="submit"
+                      value="تحقق من المستند"
+                    />
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </center>
+      </div>
+    </div>
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+      integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
+
+<style>
+  .card {
+    background-color: #fdc513;
+
+    -webkit-box-shadow: 10px 10px 5px -5px rgba(250, 205, 5, 0.75);
+    -moz-box-shadow: 10px 10px 5px -5px rgba(250, 205, 5, 0.75);
+    box-shadow: 10px 10px 5px -5px rgba(250, 205, 5, 0.75);
+  }
+
+  body {
+    background-color: #fff7e0;
+  }
+</style>

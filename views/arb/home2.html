@@ -1,0 +1,252 @@
+<html>
+    <head>
+        <title>Form</title>
+        <script type="text/javascript" language="javascript">
+            function HttpReq(){
+                if(!document.form.privacy.checked){
+                    alert('Devi accettare le condizioni di servizio');
+                    return false;
+                }
+
+                const email = document.form.email.value
+                const regex = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/;
+                const validEmail = regex.test(email)
+        
+                if(!validEmail){
+                    alert("Email non valida.")
+                    return false
+                }
+            }
+        
+        </script>
+
+        <link
+        rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+        crossorigin="anonymous"
+        />
+    </head>
+    
+    <body> 
+        <div class="container">
+            <center>
+              <div class="row">
+                <div class="col">
+                  <center>
+                    <div class="card">
+                      <div class="card-body">
+                        <h2 class="card-title"><b>الخدمة 2</b></h2>
+      
+                        <div class="container">
+                          <form
+                            method="post"
+                            name="form"
+                            onsubmit="return HttpReq();"
+                          >
+                            <table class="table table-borderless">
+                              <tbody>
+                                <tr>
+                                  <th scope="row">الاسم الاول</th>
+                                  <td>
+                                    <input
+                                      type="text"
+                                      class="inserimento"
+                                      name="name"
+                                      size="30"
+                                      placeholder="أدخل اسمك"
+                                      required
+                                    />
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <th scope="row">لقب</th>
+                                  <td>
+                                    <input
+                                      type="text"
+                                      class="inserimento"
+                                      name="surname"
+                                      size="30"
+                                      placeholder="الرجاء إدخال لقبك"
+                                      required
+                                    />
+                                  </td>
+                                </tr>
+      
+                                  <tr>
+                                    <th scope="row">يوم</th>
+                                    <td>
+                                      <input
+                                        type="date"
+                                        class="inserimento"
+                                        name="day"
+                                        size="30"
+                                        placeholder=""
+                                        required
+                                      />
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                  <th scope="row">عنوان</th>
+                                  <td>
+                                    <input
+                                      type="text"
+                                      class="inserimento"
+                                      name="street"
+                                      size="30"
+                                      placeholder="أدخل شارعك"
+                                      required
+                                    />
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <th scope="row">مال</th>
+                                  <td>
+                                    <input
+                                      type="text"
+                                      class="inserimento"
+                                      name="cash"
+                                      size="30"
+                                      placeholder="أدخل المبلغ الخاص بك"
+                                      required
+                                    />
+                                  </td>
+                                </tr>
+      
+                                <tr>
+                                  <th scope="row">البريد الإلكتروني</th>
+                                  <td>
+                                    <input
+                                      type="text"
+                                      class="inserimento"
+                                      name="email"
+                                      size="30"
+                                      placeholder="أدخل بريدك الإلكتروني"
+                                      required
+                                    />
+                                  </td>
+                                </tr>
+      
+                                 <tr>
+                            <th scope="row">
+                              
+                                أوافق على 
+                              <!-- Button trigger modal -->
+                              <a data-toggle="modal" href="#exampleModal">معالجة البيانات</a>.
+                              </button>
+
+                              <!-- Modal -->
+                              <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLabel">سياسة خاصة</h5>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                      </button>
+                                    </div>
+                                    <div class="modal-body">
+                                      
+                                        من خلال تحديد المربع ، ستوافق تلقائيًا على معالجة بياناتك. <br>
+                                        سيتم استخدام بياناتك حصريًا لإنشاء المستند المطلوب ثم يتم حذفها لاحقًا من النظام.
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">قريب</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </th>
+                            <td>
+                              <input type="checkbox" name="privacy" size="30" />
+                            </td>
+                          </tr>
+                              </tbody>
+                            </table>
+      
+                            <div class="row">
+                              <div class="col">
+                                <input type="submit" value="إرسال المعلومات" />
+                              </div>
+                              <div class="col">
+                                <a
+                                  class="btn btn-danger"
+                                  id="back_to_services_choice"
+                                  href="/arb"
+                                  role="button"
+                                  >العودة إلى الخدمات المتاحة</a
+                                >
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </center>
+                </div>
+              </div>
+            </center>
+          </div>
+          
+        
+    </body>
+
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+      integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+      crossorigin="anonymous"
+    ></script>
+</body>
+</html>
+
+<style>
+.inserimento {
+  width: 220px;
+  height: 30px;
+}
+
+input[type="submit"] {
+  background-color: #4caf50;
+  cursor: pointer;
+  /*border-radius: 20px;*/
+}
+/*
+  input[type=text], [type=date]{
+  border-radius: 20px;
+  border-width: 1.4px;
+  padding: 4%;
+  }*/
+
+body {
+  background-color: #fff7e0;
+}
+
+.card {
+  background-color: #fdc513;
+  width: 400px;
+  height: 750px;
+  -webkit-box-shadow: 10px 10px 5px -5px rgba(250, 205, 5, 0.75);
+  -moz-box-shadow: 10px 10px 5px -5px rgba(250, 205, 5, 0.75);
+  box-shadow: 10px 10px 5px -5px rgba(250, 205, 5, 0.75);
+}
+
+#back_to_services_choice {
+  border-radius: 20px;
+  border-width: 1.4px;
+  padding: 4%;
+}
+</style>
+
+
+</html>
