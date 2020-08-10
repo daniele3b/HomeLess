@@ -70,4 +70,31 @@ router.post("/it/service3", upload.single("file"), async (req, res, next) => {
     });
 });
 
+router.post("/arb/service3", upload.single("file"), async (req, res, next) => {
+  const file = req.file;
+  if (!file) {
+    res.status(400).send("Bad request!");
+  }
+
+  //Call the verify service after have uploaded the file
+
+  const options = {
+    url: config.get("currentNodeUrl") + config.get("port") + "/verifyDocument",
+    method: "post",
+    data: {
+      pdfId: req.body.pdf_id,
+      path: "./uploads/" + file.originalname,
+    },
+  };
+  axios(options)
+    .then((val) => {
+      deletePdf("./uploads/" + file.originalname);
+      res.redirect(config.get("currentNodeUrl") + config.get("port") +'/arb/messageVerifyDocumentSuccess')
+    })
+    .catch((err) => {
+      deletePdf("./uploads/" + file.originalname);
+      res.redirect(config.get("currentNodeUrl") + config.get("port") +'/arb/messageVerifyDocumentError')
+    });
+});
+
 module.exports = router;
