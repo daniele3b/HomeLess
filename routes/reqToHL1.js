@@ -133,10 +133,10 @@ router.post("/arb/service1", async (req, res) => {
   
     sendInfoToOneServer(objToSend);
   
-    res.redirect(config.get("currentNodeUrl") + config.get("port") +'/en/messageSendingSuccess')
+    res.redirect(config.get("currentNodeUrl") + config.get("port") +'/arb/messageSendingSuccess')
   })
   .catch(err => {
-    res.redirect(config.get("currentNodeUrl") + config.get("port") +'/en/messageSendingError')
+    res.redirect(config.get("currentNodeUrl") + config.get("port") +'/arb/messageSendingError')
   })
 
   
