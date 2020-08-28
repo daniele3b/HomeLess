@@ -109,11 +109,49 @@ describe('/networkNode', () => {
 
     it("should register a new node with the network", async () => {
 
-        const res = await request(server)
+        let res = await request(server)
+            .get('/blockchain')
+
+        const oldNetworkNodesLength = res.body.networkNodes.length
+
+        res = await request(server)
                 .post('/register-node')
                 .send({newNodeUrl: "http://localhost:8081"})
     
         expect(res.status).toBe(200)
+
+        res = await request(server)
+                .get('/blockchain')
+
+        const newNetworkNodesLength = res.body.networkNodes.length
+
+        expect(newNetworkNodesLength).toBe(oldNetworkNodesLength + 1)
+        
+    })
+
+    it("should register the current node with multiple new nodes of the network", async () => {
+
+        let res = await request(server)
+            .get('/blockchain')
+
+        const oldNetworkNodesLength = res.body.networkNodes.length
+
+        const allNetworkNodes = ["http://localhost:8083", "http://localhost:8084", "http://localhost:8085"]
+        const allNetworkNodesLength = allNetworkNodes.length
+
+        res = await request(server)
+                .post('/register-nodes-bulk')
+                .send({allNetworkNodes: allNetworkNodes})
+    
+        expect(res.status).toBe(200)
+
+        res = await request(server)
+                .get('/blockchain')
+
+        const newNetworkNodesLength = res.body.networkNodes.length
+
+        expect(newNetworkNodesLength).toBe(oldNetworkNodesLength + allNetworkNodesLength)
+        
     })
     
     it("should return the transaction which contains the given pdfId if it exists", async () => {
