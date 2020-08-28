@@ -58,7 +58,7 @@ describe('/networkNode', () => {
     it("should recieve a new block and reject it if block's index is not valid", async () => {
 
         const newBlock = {
-            index: 3,
+            index: 10,
             timestamp: Date.now(),
             transactions: [{
                 userData: {
@@ -84,7 +84,7 @@ describe('/networkNode', () => {
     it("should recieve a new block and reject it if block's previous block hash is not valid", async () => {
 
         const newBlock = {
-            index: 2,
+            index: 3,
             timestamp: Date.now(),
             transactions: [{
                 userData: {
