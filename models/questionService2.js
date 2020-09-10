@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 
 const QuestionService2Schema = new mongoose.Schema({
   question_id: {
-    type: String, //Q1_ENG or Q2_ITA
+    type: String, //Q1_ENG or Q2_ITA  /  Q20_ENG or Q20_ITA
     required: true,
     minlength: 6,
-    maxlength: 6,
+    maxlength: 7,
     unique: true,
   },
   text: {
