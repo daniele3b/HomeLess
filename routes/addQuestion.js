@@ -31,7 +31,67 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
 
     console.log("FATHER" + previousQuestion);
 
-    //getting children to update from father question
+
+    if(nextQuestion_id == "NaN" && req.body.previousQuestion == "NaN"){
+
+      question.previousQuestion = null
+
+      const qService2 = new QuestionService2(question);
+        qService2
+        .save()
+        .then(() => {
+          return res.status(200).send("Question added!")
+        })
+        .catch(() => {
+          return res.status(400).send("[First node] Bad request!")
+        })
+    }
+
+
+    // adding a leaf question
+    else if(nextQuestion_id == "NaN"){
+        previousQuestion[0].nextQuestions.push({
+          nextQuestionId: question.question_id,
+          answer: answer
+        })
+
+        await QuestionService2.findOneAndUpdate({question_id: previous_id, language: req.params.language}, {nextQuestions: previousQuestion[0].nextQuestions})
+
+        const qService2 = new QuestionService2(question);
+        qService2
+        .save()
+        .then(() => {
+          return res.status(200).send("Question added!")
+        })
+        .catch(() => {
+          return res.status(400).send("Bad request!")
+        })
+    }
+
+    // Adding a new root
+    else if(req.body.previousQuestion == "NaN"){
+      const oldRoot = await QuestionService2.findOneAndUpdate({
+        previousQuestion: null,
+        language: req.params.language,
+      }, {previousQuestion: question.question_id});
+
+      question.nextQuestions = [{nextQuestionId: oldRoot.question_id, answer: answer}]
+      question.previousQuestion = null
+      
+      const qService2 = new QuestionService2(question);
+        qService2
+        .save()
+        .then(() => {
+          return res.status(200).send("Question added!")
+        })
+        .catch(() => {
+          return res.status(400).send("Bad request!")
+        })
+
+    }
+
+    else {
+      //getting children to update from father question
     const childrenQuestion = previousQuestion[0].nextQuestions.filter((obj) => {
       if (obj.nextQuestionId == nextQuestion_id) {
         return obj;
@@ -81,6 +141,11 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
       .save()
       .then(() => res.status(200).send("Question added!"))
       .catch(() => res.status(400).send("Bad request!"));
+    }
+
+    
+
+    
   } else res.status(404).send("Service not found!");
 });
 

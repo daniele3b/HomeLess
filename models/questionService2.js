@@ -16,8 +16,6 @@ const QuestionService2Schema = new mongoose.Schema({
   },
   previousQuestion: {
     type: String,
-    minlength: 6,
-    maxlength: 6,
     default: null,
   },
   nextQuestions: {
