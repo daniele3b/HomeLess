@@ -19,5 +19,7 @@
   "time_mine": "20000",
 
   "homel_1": "http://localhost:8081",
-  "homel_2": "http://localhost:8082"
+  "homel_2": "http://localhost:8082",
+
+  "db": "mongodb://localhost/Homeless"
 }

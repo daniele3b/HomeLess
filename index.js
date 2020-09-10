@@ -6,6 +6,8 @@ const { getPublicKeys } = require("./startup/getPublicKey");
 
 app.use(cors());
 
+require("./startup/db")();
+
 if (config.get("security_active") == "yes") {
   getPublicKeys();
 }

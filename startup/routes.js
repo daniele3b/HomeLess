@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const Blockchain = require("../blockchain/networkNode");
 const config = require("config");
 const verify = require("../routes/verifyDocument");
+const addQuestion = require("../routes/addQuestion");
 
 module.exports = function (app) {
   app.use(bodyParser.json());
@@ -15,7 +16,7 @@ module.exports = function (app) {
   app.use("/", homePage);
   app.use("/", reqToHL1);
   app.use("/", reqToHL2);
-  
+  app.use("/", addQuestion);
 
   if (config.get("blockChainActive") == "yes") {
     app.use("/", Blockchain);
