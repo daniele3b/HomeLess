@@ -29,6 +29,10 @@ const QuestionService2Schema = new mongoose.Schema({
     minlength: 3,
     maxlength: 3,
   },
+  template_id: {
+    type: String,
+    default: null,
+  },
 });
 
 const QuestionService2 = mongoose.model(

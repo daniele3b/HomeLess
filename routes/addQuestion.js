@@ -9,6 +9,7 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
     previousQuestion: req.body.previousQuestion,
     text: req.body.text,
     language: req.body.language,
+    template_id: req.body.template_id,
     nextQuestions: [],
   };
 
@@ -31,121 +32,121 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
 
     console.log("FATHER" + previousQuestion);
 
-
-    if(nextQuestion_id == "NaN" && req.body.previousQuestion == "NaN"){
-
-      question.previousQuestion = null
+    if (nextQuestion_id == "NaN" && req.body.previousQuestion == "NaN") {
+      question.previousQuestion = null;
 
       const qService2 = new QuestionService2(question);
-        qService2
+      qService2
         .save()
         .then(() => {
-          return res.status(200).send("Question added!")
+          return res.status(200).send("Question added!");
         })
         .catch(() => {
-          return res.status(400).send("[First node] Bad request!")
-        })
+          return res.status(400).send("[First node] Bad request!");
+        });
     }
 
-
     // adding a leaf question
-    else if(nextQuestion_id == "NaN"){
-        previousQuestion[0].nextQuestions.push({
-          nextQuestionId: question.question_id,
-          answer: answer
-        })
+    else if (nextQuestion_id == "NaN") {
+      previousQuestion[0].nextQuestions.push({
+        nextQuestionId: question.question_id,
+        answer: answer,
+      });
 
-        await QuestionService2.findOneAndUpdate({question_id: previous_id, language: req.params.language}, {nextQuestions: previousQuestion[0].nextQuestions})
+      await QuestionService2.findOneAndUpdate(
+        { question_id: previous_id, language: req.params.language },
+        { nextQuestions: previousQuestion[0].nextQuestions, template_id: null }
+      );
 
-        const qService2 = new QuestionService2(question);
-        qService2
+      const qService2 = new QuestionService2(question);
+      qService2
         .save()
         .then(() => {
-          return res.status(200).send("Question added!")
+          return res.status(200).send("Question added!");
         })
         .catch(() => {
-          return res.status(400).send("Bad request!")
-        })
+          return res.status(400).send("Bad request!");
+        });
     }
 
     // Adding a new root
-    else if(req.body.previousQuestion == "NaN"){
-      const oldRoot = await QuestionService2.findOneAndUpdate({
-        previousQuestion: null,
-        language: req.params.language,
-      }, {previousQuestion: question.question_id});
+    else if (req.body.previousQuestion == "NaN") {
+      const oldRoot = await QuestionService2.findOneAndUpdate(
+        {
+          previousQuestion: null,
+          language: req.params.language,
+        },
+        { previousQuestion: question.question_id }
+      );
 
-      question.nextQuestions = [{nextQuestionId: oldRoot.question_id, answer: answer}]
-      question.previousQuestion = null
-      
+      question.nextQuestions = [
+        { nextQuestionId: oldRoot.question_id, answer: answer },
+      ];
+      question.previousQuestion = null;
+
       const qService2 = new QuestionService2(question);
-        qService2
+      qService2
         .save()
         .then(() => {
-          return res.status(200).send("Question added!")
+          return res.status(200).send("Question added!");
         })
         .catch(() => {
-          return res.status(400).send("Bad request!")
-        })
-
-    }
-
-    else {
+          return res.status(400).send("Bad request!");
+        });
+    } else {
       //getting children to update from father question
-    const childrenQuestion = previousQuestion[0].nextQuestions.filter((obj) => {
-      if (obj.nextQuestionId == nextQuestion_id) {
-        return obj;
+      const childrenQuestion = previousQuestion[0].nextQuestions.filter(
+        (obj) => {
+          if (obj.nextQuestionId == nextQuestion_id) {
+            return obj;
+          }
+        }
+      );
+
+      //Adding father's child found to new question
+      question.nextQuestions = [
+        {
+          nextQuestionId: childrenQuestion[0].nextQuestionId,
+          answer: childrenQuestion[0].answer,
+        },
+      ];
+
+      console.log("CHILDREN ADDED 2 NEW" + question.nextQuestions);
+
+      console.log("CHILDREN ID NEW" + childrenQuestion[0].nextQuestionId);
+      //updating previousQuestion on child with new question
+      await QuestionService2.findOneAndUpdate(
+        { question_id: childrenQuestion[0].nextQuestionId },
+        { previousQuestion: question.question_id }
+      );
+
+      //Replacing old child with new child in father
+      for (let i = 0; i < previousQuestion[0].nextQuestions.length; i++) {
+        if (
+          previousQuestion[0].nextQuestions[i].nextQuestionId ==
+          childrenQuestion[0].nextQuestionId
+        ) {
+          previousQuestion[0].nextQuestions[i] = {
+            nextQuestionId: question.question_id,
+            answer: answer,
+          };
+        }
       }
-    });
 
-    //Adding father's child found to new question
-    question.nextQuestions = [
-      {
-        nextQuestionId: childrenQuestion[0].nextQuestionId,
-        answer: childrenQuestion[0].answer,
-      },
-    ];
+      console.log(previousQuestion[0].nextQuestions);
 
-    console.log("CHILDREN ADDED 2 NEW" + question.nextQuestions);
+      //Updating father with correct children
+      await QuestionService2.findOneAndUpdate(
+        { question_id: previous_id },
+        { nextQuestions: previousQuestion[0].nextQuestions }
+      );
 
-    console.log("CHILDREN ID NEW" + childrenQuestion[0].nextQuestionId);
-    //updating previousQuestion on child with new question
-    await QuestionService2.findOneAndUpdate(
-      { question_id: childrenQuestion[0].nextQuestionId },
-      { previousQuestion: question.question_id }
-    );
-
-    //Replacing old child with new child in father
-    for (let i = 0; i < previousQuestion[0].nextQuestions.length; i++) {
-      if (
-        previousQuestion[0].nextQuestions[i].nextQuestionId ==
-        childrenQuestion[0].nextQuestionId
-      ) {
-        previousQuestion[0].nextQuestions[i] = {
-          nextQuestionId: question.question_id,
-          answer: answer,
-        };
-      }
+      const qService2 = new QuestionService2(question);
+      qService2
+        .save()
+        .then(() => res.status(200).send("Question added!"))
+        .catch(() => res.status(400).send("Bad request!"));
     }
-
-    console.log(previousQuestion[0].nextQuestions);
-
-    //Updating father with correct children
-    await QuestionService2.findOneAndUpdate(
-      { question_id: previous_id },
-      { nextQuestions: previousQuestion[0].nextQuestions }
-    );
-
-    const qService2 = new QuestionService2(question);
-    qService2
-      .save()
-      .then(() => res.status(200).send("Question added!"))
-      .catch(() => res.status(400).send("Bad request!"));
-    }
-
-    
-
-    
   } else res.status(404).send("Service not found!");
 });
 
