@@ -53,7 +53,8 @@ function sendInfoToOneServer(info) {
           street: info.street,
           cash: info.cash,
           email: info.email,
-          lang: info.lang
+          lang: info.lang,
+          template_id: info.template_id
         };
 
         if (config.get("security_active") == "yes") {

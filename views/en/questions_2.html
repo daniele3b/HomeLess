@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+
+    <script type="text/javascript" language="javascript">
+      function HttpReq(){
+          if(!document.form.privacy.checked){
+              alert('You must accept the terms of service');
+              return false;
+          }
+
+          const email = document.form.email.value
+          const regex = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/;
+          const validEmail = regex.test(email)
+    
+          if(!validEmail){
+              alert("Invalid email.")
+              return false
+          }
+      }
+  
+    </script>
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+      crossorigin="anonymous"
+    />
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"
+  />
+    <title >Services available</title>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="container">
+        
+
+        <div id="app">
+    
+                    <div v-if="!formVisible">
+
+                      <center>
+                        <div class="card">
+  
+                          <button @click="getFirstQuestion()" type="button" class="btn mt-2" style="width: 230px; color: blue;"> <- Back to the beginning </button>
+                          
+  
+                          <div class="alert alert-dark mt-2 ml-2 mr-2" role="alert">
+                            {{currentQuestion.text}}
+                          </div>
+  
+                          <div v-for="nextQuestion in currentQuestion.nextQuestions">
+                            <input type="radio" v-model="answerSelected" name="answerSelected" :value="nextQuestion.nextQuestionId"> {{nextQuestion.answer}}
+                          </div>
+  
+                          <center>
+                            <button @click="loadNextQuestion()" type="button" class="btn btn-success mt-2 mb-2" style="width: 80px;">Next</button>
+                          </center>
+
+                        </div>
+                      </center>
+
+                    </div>
+
+                    <div v-else>
+
+                      <!-- FORM -->
+                      
+                      <center>
+
+                      <div class="card" id="card-form">
+                        <div class="card-body">
+                          <h2 class="card-title"><b>SERVICE 2</b></h2>
+        
+                          <div class="container">
+                            <form
+                              method="post"
+                              name="form"
+                              action="http://localhost:8080/en/service2"
+                              onsubmit="return HttpReq();"
+                            >
+                              <table class="table table-borderless">
+                                <tbody>
+
+                                  <input v-model="template_id" type="hidden" id="hidden_template_id" name="template_id"/>
+
+                                  <tr v-show="template_id != 'T7' ">
+                                    <th scope="row">Name</th>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        class="inserimento"
+                                        name="name"
+                                        default=""
+                                        size="30"
+                                        placeholder="Insert name"
+                                        :required="template_id != 'T7' "
+                                      />
+                                    </td>
+                                  </tr>
+                                  <tr v-show="template_id != 'T7' ">
+                                    <th scope="row">Surname</th>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        class="inserimento"
+                                        name="surname"
+                                        default=""
+                                        size="30"
+                                        placeholder="Insert surname"
+                                        :required="template_id != 'T7' "
+                                      />
+                                    </td>
+                                  </tr>
+        
+                                  <tr v-show="template_id != 'T7' ">
+                                      <th scope="row">Day</th>
+                                      <td>
+                                        <input
+                                          type="date"
+                                          class="inserimento"
+                                          name="day"
+                                          default=""
+                                          size="30"
+                                          placeholder=""
+                                          :required="template_id != 'T7' "
+                                        />
+                                      </td>
+                                  </tr>
+        
+                                  <tr v-show="template_id != 'T6' ">
+                                    <th scope="row">Address</th>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        class="inserimento"
+                                        name="street"
+                                        default=""
+                                        size="30"
+                                        placeholder="Insert your address"
+                                        :required="template_id != 'T6' "
+                                      />
+                                    </td>
+                                  </tr>
+                                  <tr v-show="template_id != 'T5' && template_id != 'T6' ">
+                                    <th scope="row">Cash</th>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        class="inserimento"
+                                        name="cash"
+                                        default=""
+                                        size="30"
+                                        placeholder="Enter your amount"
+                                        :required="template_id != 'T5' && template_id != 'T6' "
+                                      />
+                                    </td>
+                                  </tr>
+        
+                                  <tr>
+                                    <th scope="row">Email</th>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        class="inserimento"
+                                        name="email"
+                                        size="30"
+                                        placeholder="Insert your email"
+                                        required
+                                      />
+                                    </td>
+                                  </tr>
+        
+                                  <tr>
+                                    <th scope="row">
+                                      
+                                      I accept
+                                      <!-- Button trigger modal -->
+                                      <a data-toggle="modal" href="#exampleModal">privacy policy</a>.
+                                      </button>
+        
+                                      <!-- Modal -->
+                                      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                          <div class="modal-content">
+                                            <div class="modal-header">
+                                              <h5 class="modal-title" id="exampleModalLabel">Privacy policy</h5>
+                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                              </button>
+                                            </div>
+                                            <div class="modal-body">
+                                              By checking this you will automatically accept this data treatment. <br>
+                                              Your data will be used exclusively for the creation of documents and subsequently deleted from our systems.
+                                            </div>
+                                            <div class="modal-footer">
+                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </th>
+                                    <td>
+                                      <input type="checkbox" name="privacy" size="30" />
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+        
+                              <div class="row">
+                                <div class="col">
+                                  <input type="submit" value="Send information" />
+                                </div>
+                                <div class="col">
+                                  <a
+                                    class="btn btn-danger"
+                                    id="back_to_services_choice"
+                                    href="/en"
+                                    role="button"
+                                    >Back to avaible service</a
+                                  >
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </center>
+
+                    </div>
+           
+          
+
+
+        </div>
+
+      </div>
+    </div>
+
+    <script>
+
+
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                questions: [],
+
+                currentQuestion: "",
+                answerSelected: "",
+                template_id: "",
+
+                formVisible: false
+            },
+            
+            beforeCreate: function(){
+                
+             
+              this.$http.get('http://localhost:8080/getQuestionsENG/2').then(response => {
+ 
+                
+                this.questions = response.body
+                this.getFirstQuestion()
+
+                }, response => {
+                  // error callback
+              })
+                
+            },
+
+            methods: {
+
+              getFirstQuestion: function(){
+                let i = 0
+                const dim = this.questions.length
+
+                for(i=0;i<dim;i++){
+                  if(this.questions[i].previousQuestion == null) this.currentQuestion = this.questions[i]
+                }
+
+                this.answerSelected = ""
+                this.template_id = ""
+                this.formVisible = false
+              },
+
+              loadNextQuestion: function(){
+
+                let i = 0
+                const dim = this.questions.length
+
+                for(i=0;i<dim;i++){
+                  if(this.answerSelected == this.questions[i].question_id && this.questions[i].template_id == null){
+                    this.currentQuestion = this.questions[i]
+                  } 
+                  else if(this.answerSelected == this.questions[i].question_id && this.questions[i].template_id != null){
+                    // Now we can see our form in the website!
+                    this.formVisible = true
+                    
+                    this.template_id = this.questions[i].template_id
+                  } 
+                }
+              },
+
+            }
+    })
+    </script>
+
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+      integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
+
+<style>
+.inserimento {
+  width: 220px;
+  height: 30px;
+}
+
+input[type="submit"] {
+  background-color: #4caf50;
+  cursor: pointer;
+  /*border-radius: 20px;*/
+}
+
+#card-form {
+  background-color: #fdc513;
+  width: 400px;
+  height: 750px;
+  -webkit-box-shadow: 10px 10px 5px -5px rgba(250, 205, 5, 0.75);
+  -moz-box-shadow: 10px 10px 5px -5px rgba(250, 205, 5, 0.75);
+  box-shadow: 10px 10px 5px -5px rgba(250, 205, 5, 0.75);
+}
+
+.card {
+  background-color: #fdc513;
+  -webkit-box-shadow: 10px 10px 5px -5px rgba(250, 205, 5, 0.75);
+  -moz-box-shadow: 10px 10px 5px -5px rgba(250, 205, 5, 0.75);
+  box-shadow: 10px 10px 5px -5px rgba(250, 205, 5, 0.75);
+}
+
+body {
+  background-color: #fff7e0;
+}
+
+.card-text {
+  position: relative;
+}
+</style>

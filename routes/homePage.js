@@ -36,6 +36,10 @@ router.get("/en/messageVerifyDocumentSuccess", async (req, res) => {
   res.sendFile(path.join(__dirname, "../views/en", "messageVerifyDocumentSuccess.html"));
 });
 
+router.get("/en/service_2/questions_2", async (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/en", "questions_2.html"));
+});
+
 // Italian
 
 router.get("/it", async (req, res) => {

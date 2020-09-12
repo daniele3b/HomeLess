@@ -36,8 +36,11 @@ router.post("/en/service2", async (req, res) => {
       street: req.body.street,
       cash: req.body.cash,
       service: "2",
-      lang: "eng"
+      lang: "eng",
+      template_id: req.body.template_id
     };
+
+    console.log(objToSend)
 
     // If security is active
     if (config.get("security_active") == "yes") {
