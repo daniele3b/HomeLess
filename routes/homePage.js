@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const config = require("config");
+require("dotenv").config();
 const path = require("path");
 
 // English
@@ -21,7 +23,9 @@ router.get("/en/service3", async (req, res) => {
 });
 
 router.get("/en/messageSendingSuccess", async (req, res) => {
-  res.sendFile(path.join(__dirname, "../views/en", "messageSendingSuccess.html"));
+  res.sendFile(
+    path.join(__dirname, "../views/en", "messageSendingSuccess.html")
+  );
 });
 
 router.get("/en/messageSendingError", async (req, res) => {
@@ -29,15 +33,34 @@ router.get("/en/messageSendingError", async (req, res) => {
 });
 
 router.get("/en/messageVerifyDocumentError", async (req, res) => {
-  res.sendFile(path.join(__dirname, "../views/en", "messageVerifyDocumentError.html"));
+  res.sendFile(
+    path.join(__dirname, "../views/en", "messageVerifyDocumentError.html")
+  );
 });
 
 router.get("/en/messageVerifyDocumentSuccess", async (req, res) => {
-  res.sendFile(path.join(__dirname, "../views/en", "messageVerifyDocumentSuccess.html"));
+  res.sendFile(
+    path.join(__dirname, "../views/en", "messageVerifyDocumentSuccess.html")
+  );
 });
 
 router.get("/en/service_2/questions_2", async (req, res) => {
   res.sendFile(path.join(__dirname, "../views/en", "questions_2.html"));
+});
+
+router.get("/en/login", async (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/en", "login.html"));
+});
+
+router.post("/en/credentialVerification", async (req, res) => {
+  const pw = req.body.password;
+  if (pw == process.env.ENG_PW) {
+    res.sendFile(
+      path.join(__dirname, "../views/en", "questionManagement.html")
+    );
+  } else {
+    res.sendFile(path.join(__dirname, "../views/en", "home.html"));
+  }
 });
 
 // Italian
@@ -59,7 +82,9 @@ router.get("/it/service3", async (req, res) => {
 });
 
 router.get("/it/messageSendingSuccess", async (req, res) => {
-  res.sendFile(path.join(__dirname, "../views/it", "messageSendingSuccess.html"));
+  res.sendFile(
+    path.join(__dirname, "../views/it", "messageSendingSuccess.html")
+  );
 });
 
 router.get("/it/messageSendingError", async (req, res) => {
@@ -67,11 +92,15 @@ router.get("/it/messageSendingError", async (req, res) => {
 });
 
 router.get("/it/messageVerifyDocumentError", async (req, res) => {
-  res.sendFile(path.join(__dirname, "../views/it", "messageVerifyDocumentError.html"));
+  res.sendFile(
+    path.join(__dirname, "../views/it", "messageVerifyDocumentError.html")
+  );
 });
 
 router.get("/it/messageVerifyDocumentSuccess", async (req, res) => {
-  res.sendFile(path.join(__dirname, "../views/it", "messageVerifyDocumentSuccess.html"));
+  res.sendFile(
+    path.join(__dirname, "../views/it", "messageVerifyDocumentSuccess.html")
+  );
 });
 
 // Arabic
@@ -93,19 +122,27 @@ router.get("/arb/service3", async (req, res) => {
 });
 
 router.get("/arb/messageSendingSuccess", async (req, res) => {
-  res.sendFile(path.join(__dirname, "../views/arb", "messageSendingSuccess.html"));
+  res.sendFile(
+    path.join(__dirname, "../views/arb", "messageSendingSuccess.html")
+  );
 });
 
 router.get("/arb/messageSendingError", async (req, res) => {
-  res.sendFile(path.join(__dirname, "../views/arb", "messageSendingError.html"));
+  res.sendFile(
+    path.join(__dirname, "../views/arb", "messageSendingError.html")
+  );
 });
 
 router.get("/arb/messageVerifyDocumentError", async (req, res) => {
-  res.sendFile(path.join(__dirname, "../views/arb", "messageVerifyDocumentError.html"));
+  res.sendFile(
+    path.join(__dirname, "../views/arb", "messageVerifyDocumentError.html")
+  );
 });
 
 router.get("/arb/messageVerifyDocumentSuccess", async (req, res) => {
-  res.sendFile(path.join(__dirname, "../views/arb", "messageVerifyDocumentSuccess.html"));
+  res.sendFile(
+    path.join(__dirname, "../views/arb", "messageVerifyDocumentSuccess.html")
+  );
 });
 
 module.exports = router;
