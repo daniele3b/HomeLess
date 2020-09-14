@@ -29,6 +29,9 @@
                 <h4><b>Question Management</b></h4>
               </center>
             </div>
+
+            <!-- VIEW MODE-->
+
             <div class="card-body" v-if="viewMode">
               <div class="table-responsive" style="height: 550px">
                 <table class="table">
@@ -40,8 +43,6 @@
                       <th scope="col">Edit</th>
                     </tr>
                   </thead>
-
-                  <!--  CORPO TABELLA  -->
                   <tbody>
                     <tr v-for="question in questions">
                       <td>{{question.question_id}}</td>
@@ -82,8 +83,19 @@
                 >
                   Add a new question
                 </button>
+                <button
+                  type="button"
+                  data-title="Remove"
+                  class="btn btn-danger mt-1"
+                  @click="switch2Remove()"
+                >
+                  Remove Questions
+                </button>
               </center>
             </div>
+
+            <!-- EDIT MODE-->
+
             <div class="card-body" v-else-if="editMode">
               <h5 @click="fromEdit2View()" style="color: blue; cursor: pointer">
                 <-Back
@@ -116,6 +128,53 @@
                 </div>
               </center>
             </div>
+
+            <!-- REMOVE MODE-->
+
+            <div class="card-body" v-else-if="removeMode">
+              <div class="table-responsive" style="height: 550px">
+                <table class="table">
+                  <thead class="thead-light">
+                    <tr>
+                      <th scope="col">ID</th>
+                      <th scope="col">TEXT</th>
+                      <th scope="col">NEXT QUESTIONS</th>
+                      <th scope="col">Delete</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="question in removableQuestions">
+                      <td>{{question.question_id}}</td>
+                      <td>{{question.text}}</td>
+                      <td style="max-width: 250px">
+                        {{question.template_id}}
+                        <p v-for="next in question.nextQuestions">
+                          {{next.answer}} -> {{next.nextQuestionId}}
+                        </p>
+                      </td>
+                      <td>
+                        <p
+                          data-placement="top"
+                          data-toggle="tooltip"
+                          title="Edit"
+                        >
+                          <button
+                            :id="question.question_id"
+                            class="btn btn-danger btn-xs"
+                            data-title="Delete"
+                            @click="removeQuestion()"
+                            data-toggle="modal"
+                            data-target="#edit"
+                          >
+                            <span class="glyphicon glyphicon-trash"></span>
+                          </button>
+                        </p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -129,9 +188,8 @@
           currentQuestion: null,
           viewMode: true,
           editMode: false,
-          previousText: "",
-          previousAnswers: [],
-          previousTemplateId: null,
+          removeMode: false,
+          removableQuestions: [],
           text: "",
           answers: [],
           template_id: null,
@@ -162,9 +220,6 @@
                 break;
               }
             }
-            this.previousText = this.questions[i].text;
-            this.previousAnswers = this.questions[i].nextQuestions;
-            this.previousTemplateId = this.questions[i].template_id;
 
             this.text = this.currentQuestion.text;
             this.answers = this.currentQuestion.nextQuestions;
@@ -180,6 +235,19 @@
             this.$http.get("http://localhost:8080/getQuestionsENG/2").then(
               (response) => {
                 this.questions = response.body;
+              },
+              (response) => {
+                // error callback
+              }
+            );
+          },
+          switch2Remove: function () {
+            this.removeMode = true;
+            this.viewMode = false;
+
+            this.$http.get("/getRemovableQuestions/2/ENG").then(
+              (response) => {
+                this.removableQuestions = response.body;
               },
               (response) => {
                 // error callback
