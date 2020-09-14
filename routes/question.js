@@ -234,4 +234,33 @@ router.delete(
   }
 );
 
+router.put("/modifyQuestion/:question_id/:service/:language", async (req, res) => {
+
+  const question_id = req.params.question_id;
+  const service = req.params.service;
+  const language = req.params.language;
+
+  if (question_id.length < 6 || question_id.length > 7)
+    return res.status(400).send("Invalid question id.");
+  if (language.length != 3) return res.status(400).send("Invalid language.");
+
+  if(service == "2"){
+
+    let question = await QuestionService2.find({question_id: question_id, language: language})
+    if(question.length == 0) return res.status(404).send("Question with the given id not found.")
+
+    question = question[0]
+
+    await QuestionService2.findOneAndUpdate({question_id: question_id, language: language}, 
+      {text: req.body.text, nextQuestions: req.body.nextQuestions, template_id: req.body.template_id})
+
+    res.status(200).send("Question "+question_id+" updated!")
+  } 
+
+  else{
+    res.status(404).send("Service not found!")
+  }
+
+});
+
 module.exports = router;
