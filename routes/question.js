@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const { removeQuestionService2 } = require("../helper/utilitiesDB");
 
-router.get("/question/:question_id/:service/:language", async (req, res) => {
+router.get("/getQuestion/:question_id/:service/:language", async (req, res) => {
   const question_id = req.params.question_id;
   const service = req.params.service;
   const language = req.params.language;
