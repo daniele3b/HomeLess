@@ -1,6 +1,7 @@
 const { QuestionService2 } = require("../models/questionService2");
 const express = require("express");
 const router = express.Router();
+const {removeQuestionService2} = require('../helper/utilitiesDB')
 
 router.post("/addQuestion/:service/:language", async (req, res) => {
   const service = req.params.service;
@@ -148,6 +149,47 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
         .catch(() => res.status(400).send("Bad request!"));
     }
   } else res.status(404).send("Service not found!");
+});
+
+router.delete("/removeQuestion/:question_id/:service/:language", async (req, res) => {
+    const question_id = req.params.question_id
+    const service = req.params.service
+    const language = req.params.language
+
+    if(question_id.length < 6 || question_id.length > 7) return res.status(400).send("Invalid question id.")
+    if(language.length != 3) return res.status(400).send("Invalid language.")
+
+
+    if(service == "2"){
+      let question = await QuestionService2.find({question_id: question_id, language: language})
+      if(question.length == 0) return res.status(404).send("Question with the id "+question_id+" not found.")
+      
+      question = question[0]
+
+      console.log(question.previousQuestion)
+      console.log(language)
+
+      let father = QuestionService2.find({question_id: question.previousQuestion, language: language})
+      father = father[0]
+
+      const newChildren = []
+      let i
+      const dim = father.nextQuestions.length
+
+      for(i=0;i<dim;i++){
+        if(father.nextQuestions[i].nextQuestionId != question_id) newChildren.push(father.nextQuestions[i])
+      }
+
+      await QuestionService2.findOneAndUpdate({question_id: question.previousQuestion, language: language}, 
+        {nextQuestions: newChildren})
+
+      removeQuestionService2(question)
+
+      res.status(200).send("Question "+question_id+" and his child removed.")
+
+    }
+
+    else res.status(404).send("Service not found!")
 });
 
 module.exports = router;
