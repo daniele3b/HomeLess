@@ -24,10 +24,14 @@
       <div class="container">
         <div id="app">
           <div class="card">
+            <div class="card-title mt-2">
+              <center>
+                <h4><b>Question Management</b></h4>
+              </center>
+            </div>
             <div class="card-body">
               <div class="table-responsive" style="height: 550px">
                 <table class="table">
-                  <!--  INTESTAZIONE TABELLA  -->
                   <thead class="thead-light">
                     <tr>
                       <th scope="col">ID</th>
@@ -44,7 +48,7 @@
                     <tr v-for="question in questions">
                       <td>{{question.question_id}}</td>
                       <td>{{question.text}}</td>
-                      <td>
+                      <td style="max-width: 250px">
                         {{question.template_id}}
                         <p v-for="next in question.nextQuestions">
                           {{next.answer}} -> {{next.nextQuestionId}}
