@@ -129,7 +129,7 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
         }
       );
 
-      // Avoiding cycles
+      // Avoiding cycles and bad insertions
       if(childrenQuestion[0] == undefined) return res.status(400).send("Impossible to create this link.")
 
       //Adding father's child found to new question
