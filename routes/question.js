@@ -3,6 +3,25 @@ const express = require("express");
 const router = express.Router();
 const { removeQuestionService2 } = require("../helper/utilitiesDB");
 
+router.get("/getRemovableQuestions/:service/:language", async (req, res) => {
+    const service = req.params.service;
+    const language = req.params.language;
+
+    if (language.length != 3) return res.status(400).send("Invalid language.");
+
+    if(service == "2"){
+      const questions = await QuestionService2.find({language: language, $where:"this.nextQuestions.length > 0"})
+
+      if(questions.length == 0) return res.status(404).send("No removable questions found.")
+
+      res.status(200).send(questions)
+    }
+
+    else{
+      res.status(404).send("Service not found!")
+    }
+})
+
 router.post("/addQuestion/:service/:language", async (req, res) => {
   const service = req.params.service;
   const question = {

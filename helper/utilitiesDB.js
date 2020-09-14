@@ -1,8 +1,23 @@
 const { QuestionService2 } = require("../models/questionService2");
-
+const axios = require("axios")
+const config = require("config")
 
 async function removeQuestionService2(question){
     if(question.nextQuestions.length == 0){
+
+        const options = {
+            url: config.get("homel_2")+"/removeTemplate/"+question.language+"/"+question.template_id,
+            method: "delete"
+        }
+
+        axios(options)
+        .then((response) => {
+            console.log(response.data)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+
         await QuestionService2.remove({question_id: question.question_id})
         return
     }
