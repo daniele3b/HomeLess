@@ -3,6 +3,32 @@ const express = require("express");
 const router = express.Router();
 const { removeQuestionService2 } = require("../helper/utilitiesDB");
 
+router.get("/question/:question_id/:service/:language", async (req, res) => {
+  const question_id = req.params.question_id;
+  const service = req.params.service;
+  const language = req.params.language;
+
+  if (question_id.length < 6 || question_id.length > 7)
+    return res.status(400).send("Invalid question id.");
+  if (language.length != 3) return res.status(400).send("Invalid language.");
+
+  if(service == "2"){
+    
+    let question = await QuestionService2.find({question_id: question_id, language: language})
+
+    if(question.length == 0) return res.status(404).send("Question with the given id not found.")
+    
+    question = question[0]
+
+    res.status(200).send(question)
+  }
+
+  else{
+    res.status(404).send("Service not found!")
+  }
+
+});
+
 router.get("/getRemovableQuestions/:service/:language", async (req, res) => {
     const service = req.params.service;
     const language = req.params.language;
