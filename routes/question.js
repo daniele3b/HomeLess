@@ -33,6 +33,9 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
     nextQuestions: [],
   };
 
+  const questionInDB = await QuestionService2.find({text: question.text})
+  if(questionInDB.length > 0) return res.status(400).send("Question already exists.")
+
   //Getting question_id of children question and answer to reach it
   const nextQuestion_id = req.body.nextQuestion;
   const answer = req.body.answer;
@@ -68,6 +71,9 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
 
     // adding a leaf question
     else if (nextQuestion_id == "NaN") {
+
+      if(req.body.template_id == undefined) return res.status(400).send("Please specify template_id.")
+
       previousQuestion[0].nextQuestions.push({
         nextQuestionId: question.question_id,
         answer: answer,
