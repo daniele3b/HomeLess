@@ -12,6 +12,10 @@ const QuestionService2Schema = new mongoose.Schema({
     type: String,
     maxlength: 100,
   },
+  pathPreviewPdf: {
+    type: String,
+    default: "",
+  },
   previousQuestion: {
     type: String,
     default: null,

@@ -81,6 +81,8 @@
                           <h2 class="card-title"><b>SERVICE 2</b></h2>
         
                           <div class="container">
+                         
+                            <img :src="currentQuestion.pathPreviewPdf" width="100px">
                             <form
                               method="post"
                               name="form"
@@ -303,7 +305,7 @@
                   else if(this.answerSelected == this.questions[i].question_id && this.questions[i].template_id != null){
                     // Now we can see our form in the website!
                     this.formVisible = true
-                    
+                    this.currentQuestion=this.questions[i]
                     this.template_id = this.questions[i].template_id
                   } 
                 }

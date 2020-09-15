@@ -283,6 +283,14 @@
                           </div>
                         </div>
 
+
+                        <div class="row mt-2">
+                          <div class="col">Path preview</div>
+                          <div class="col">
+                            <input v-model="path" type="text" required />
+                          </div>
+                        </div>
+
                         <center>
                         <form method="post" action="http://localhost:8082/loadingTemplate" enctype="multipart/form-data" name="form">
                          
@@ -399,6 +407,7 @@
           answer: "",
           previousQuestion_id:"",
           nextQuestion_Id:"",
+          path:"",
 
           viewMode: true,
           editMode: false,
@@ -475,6 +484,7 @@
                   previousQuestion: this.previousQuestion_id,
                   nextQuestion:"NaN",
                   language: "ENG",
+                  pathPreviewPdf:this.path
                 })
                 .then(
                   (response) => {

@@ -85,6 +85,7 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
     text: req.body.text,
     language: req.body.language,
     template_id: req.body.template_id,
+    pathPreviewPdf: req.body.pathPreviewPdf,
     nextQuestions: [],
   };
 
