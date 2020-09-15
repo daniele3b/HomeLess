@@ -1,7 +1,11 @@
 const { QuestionService2 } = require("../models/questionService2");
 const express = require("express");
 const router = express.Router();
-const { removeQuestionService2, getTree, getPath } = require("../helper/utilitiesDB");
+const {
+  removeQuestionService2,
+  getTree,
+  getPath,
+} = require("../helper/utilitiesDB");
 
 router.get("/getQuestion/:question_id/:service/:language", async (req, res) => {
   const question_id = req.params.question_id;
@@ -56,43 +60,49 @@ router.get("/getTreeFrom/:question_id/:service/:language", async (req, res) => {
   }
 });
 
-router.get("/getPath/from/:questionStartId/to/:questionEndId/:service/:language", async (req, res) => {
-  const questionStartId = req.params.questionStartId
-  const questionEndId = req.params.questionEndId
-  const service = req.params.service;
-  const language = req.params.language;
+router.get(
+  "/getPath/from/:questionStartId/to/:questionEndId/:service/:language",
+  async (req, res) => {
+    const questionStartId = req.params.questionStartId;
+    const questionEndId = req.params.questionEndId;
+    const service = req.params.service;
+    const language = req.params.language;
 
-  if (questionStartId.length < 6 || questionStartId.length > 7)
-    return res.status(400).send("Invalid question start id.");
-  if (questionEndId.length < 6 || questionEndId.length > 7)
-    return res.status(400).send("Invalid question end id.");
-  
-  if (language.length != 3) return res.status(400).send("Invalid language.");
+    if (questionStartId.length < 6 || questionStartId.length > 7)
+      return res.status(400).send("Invalid question start id.");
+    if (questionEndId.length < 6 || questionEndId.length > 7)
+      return res.status(400).send("Invalid question end id.");
 
-  if(service == "2"){
-    let questionEnd = await QuestionService2.find({question_id: questionEndId, language: language})
-    if(questionEnd.length == 0) return res.status(404).send("Question end not found!")
+    if (language.length != 3) return res.status(400).send("Invalid language.");
 
-    let questionStart = await QuestionService2.find({question_id: questionStartId, language: language})
-    if(questionStart.length == 0) return res.status(404).send("Question start not found!")
+    if (service == "2") {
+      let questionEnd = await QuestionService2.find({
+        question_id: questionEndId,
+        language: language,
+      });
+      if (questionEnd.length == 0)
+        return res.status(404).send("Question end not found!");
 
-    questionStart = questionStart[0]
-    questionEnd = questionEnd[0]
+      let questionStart = await QuestionService2.find({
+        question_id: questionStartId,
+        language: language,
+      });
+      if (questionStart.length == 0)
+        return res.status(404).send("Question start not found!");
 
-    getPath(questionStart, questionEnd)
-    .then(path => {
+      questionStart = questionStart[0];
+      questionEnd = questionEnd[0];
 
-      if(path.length == 0) return res.status(404).send("Path not found!")
+      getPath(questionStart, questionEnd).then((path) => {
+        if (path.length == 0) return res.status(404).send("Path not found!");
 
-      res.status(200).send(path)
-    })
-
+        res.status(200).send(path);
+      });
+    } else {
+      res.status(404).send("Service not found!");
+    }
   }
-
-  else{
-    res.status(404).send("Service not found!")
-  }
-})
+);
 
 router.get("/getRemovableQuestions/:service/:language", async (req, res) => {
   const service = req.params.service;
@@ -127,7 +137,10 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
     nextQuestions: [],
   };
 
-  const questionInDB = await QuestionService2.find({ text: question.text, language: req.params.language });
+  const questionInDB = await QuestionService2.find({
+    text: question.text,
+    language: req.params.language,
+  });
   if (questionInDB.length > 0)
     return res.status(400).send("Question already exists.");
 
@@ -166,6 +179,14 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
 
     // adding a leaf question
     else if (nextQuestion_id == "NaN") {
+      let qleaf = await QuestionService2.find({
+        language: req.params.language,
+        template_id: req.body.template_id,
+      });
+
+      if (qleaf.length > 0)
+        return res.status(400).send("Template already used!");
+
       previousQuestion[0].nextQuestions.push({
         nextQuestionId: question.question_id,
         answer: answer,
@@ -173,7 +194,11 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
 
       await QuestionService2.findOneAndUpdate(
         { question_id: previous_id, language: req.params.language },
-        { nextQuestions: previousQuestion[0].nextQuestions, template_id: null, pathPreviewPdf: ""}
+        {
+          nextQuestions: previousQuestion[0].nextQuestions,
+          template_id: null,
+          pathPreviewPdf: "",
+        }
       );
 
       const qService2 = new QuestionService2(question);
