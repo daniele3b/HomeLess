@@ -11,7 +11,6 @@ const QuestionService2Schema = new mongoose.Schema({
   text: {
     type: String,
     required: true,
-    minlength: 10,
     maxlength: 100,
   },
   previousQuestion: {

@@ -12,21 +12,21 @@ router.get("/getQuestion/:question_id/:service/:language", async (req, res) => {
     return res.status(400).send("Invalid question id.");
   if (language.length != 3) return res.status(400).send("Invalid language.");
 
-  if(service == "2"){
-    
-    let question = await QuestionService2.find({question_id: question_id, language: language})
+  if (service == "2") {
+    let question = await QuestionService2.find({
+      question_id: question_id,
+      language: language,
+    });
 
-    if(question.length == 0) return res.status(404).send("Question with the given id not found.")
-    
-    question = question[0]
+    if (question.length == 0)
+      return res.status(404).send("Question with the given id not found.");
 
-    res.status(200).send(question)
+    question = question[0];
+
+    res.status(200).send(question);
+  } else {
+    res.status(404).send("Service not found!");
   }
-
-  else{
-    res.status(404).send("Service not found!")
-  }
-
 });
 
 router.get("/getTreeFrom/:question_id/:service/:language", async (req, res) => {
@@ -38,46 +38,44 @@ router.get("/getTreeFrom/:question_id/:service/:language", async (req, res) => {
     return res.status(400).send("Invalid question id.");
   if (language.length != 3) return res.status(400).send("Invalid language.");
 
-  if(service == "2"){
+  if (service == "2") {
+    let question = await QuestionService2.find({
+      question_id: question_id,
+      language: language,
+    });
 
-    let question = await QuestionService2.find({question_id: question_id, language: language})
+    if (question.length == 0)
+      return res.status(404).send("Question not found!");
+    question = question[0];
 
-    if(question.length == 0) return res.status(404).send("Question not found!")
-    question = question[0]
-
-
-    getTree(question)
-    .then((questions) => {
-
-      res.status(200).send(questions)
-    })
-    
+    getTree(question).then((questions) => {
+      res.status(200).send(questions);
+    });
+  } else {
+    res.status(404).send("Service not found!");
   }
-
-  else{
-    res.status(404).send("Service not found!")
-  }
-
 });
 
 router.get("/getRemovableQuestions/:service/:language", async (req, res) => {
-    const service = req.params.service;
-    const language = req.params.language;
+  const service = req.params.service;
+  const language = req.params.language;
 
-    if (language.length != 3) return res.status(400).send("Invalid language.");
+  if (language.length != 3) return res.status(400).send("Invalid language.");
 
-    if(service == "2"){
-      const questions = await QuestionService2.find({language: language, $where:"this.nextQuestions.length > 0"})
+  if (service == "2") {
+    const questions = await QuestionService2.find({
+      language: language,
+      $where: "this.nextQuestions.length > 0",
+    });
 
-      if(questions.length == 0) return res.status(404).send("No removable questions found.")
+    if (questions.length == 0)
+      return res.status(404).send("No removable questions found.");
 
-      res.status(200).send(questions)
-    }
-
-    else{
-      res.status(404).send("Service not found!")
-    }
-})
+    res.status(200).send(questions);
+  } else {
+    res.status(404).send("Service not found!");
+  }
+});
 
 router.post("/addQuestion/:service/:language", async (req, res) => {
   const service = req.params.service;
@@ -90,8 +88,9 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
     nextQuestions: [],
   };
 
-  const questionInDB = await QuestionService2.find({text: question.text})
-  if(questionInDB.length > 0) return res.status(400).send("Question already exists.")
+  const questionInDB = await QuestionService2.find({ text: question.text });
+  if (questionInDB.length > 0)
+    return res.status(400).send("Question already exists.");
 
   //Getting question_id of children question and answer to reach it
   const nextQuestion_id = req.body.nextQuestion;
@@ -128,9 +127,6 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
 
     // adding a leaf question
     else if (nextQuestion_id == "NaN") {
-
-     
-
       previousQuestion[0].nextQuestions.push({
         nextQuestionId: question.question_id,
         answer: answer,
@@ -148,7 +144,7 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
           return res.status(200).send("Question added!");
         })
         .catch(() => {
-          return res.status(400).send("Bad request!");
+          return res.status(400).send("Bad request leaf!");
         });
     }
 
@@ -162,6 +158,7 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
         { previousQuestion: question.question_id }
       );
 
+      console.log(oldRoot);
       question.nextQuestions = [
         { nextQuestionId: oldRoot.question_id, answer: answer },
       ];
@@ -173,8 +170,9 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
         .then(() => {
           return res.status(200).send("Question added!");
         })
-        .catch(() => {
-          return res.status(400).send("Bad request!");
+        .catch((err) => {
+          console.log(err);
+          return res.status(400).send("Bad request root!");
         });
     } else {
       //getting children to update from father question
@@ -187,7 +185,8 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
       );
 
       // Avoiding cycles and bad insertions
-      if(childrenQuestion[0] == undefined) return res.status(400).send("Impossible to create this link.")
+      if (childrenQuestion[0] == undefined)
+        return res.status(400).send("Impossible to create this link.");
 
       //Adding father's child found to new question
       question.nextQuestions = [
@@ -231,7 +230,7 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
       qService2
         .save()
         .then(() => res.status(200).send("Question added!"))
-        .catch(() => res.status(400).send("Bad request!"));
+        .catch(() => res.status(400).send("Bad request middle!"));
     }
   } else res.status(404).send("Service not found!");
 });
@@ -291,33 +290,41 @@ router.delete(
   }
 );
 
-router.put("/modifyQuestion/:question_id/:service/:language", async (req, res) => {
+router.put(
+  "/modifyQuestion/:question_id/:service/:language",
+  async (req, res) => {
+    const question_id = req.params.question_id;
+    const service = req.params.service;
+    const language = req.params.language;
 
-  const question_id = req.params.question_id;
-  const service = req.params.service;
-  const language = req.params.language;
+    if (question_id.length < 6 || question_id.length > 7)
+      return res.status(400).send("Invalid question id.");
+    if (language.length != 3) return res.status(400).send("Invalid language.");
 
-  if (question_id.length < 6 || question_id.length > 7)
-    return res.status(400).send("Invalid question id.");
-  if (language.length != 3) return res.status(400).send("Invalid language.");
+    if (service == "2") {
+      let question = await QuestionService2.find({
+        question_id: question_id,
+        language: language,
+      });
+      if (question.length == 0)
+        return res.status(404).send("Question with the given id not found.");
 
-  if(service == "2"){
+      question = question[0];
 
-    let question = await QuestionService2.find({question_id: question_id, language: language})
-    if(question.length == 0) return res.status(404).send("Question with the given id not found.")
+      await QuestionService2.findOneAndUpdate(
+        { question_id: question_id, language: language },
+        {
+          text: req.body.text,
+          nextQuestions: req.body.nextQuestions,
+          template_id: req.body.template_id,
+        }
+      );
 
-    question = question[0]
-
-    await QuestionService2.findOneAndUpdate({question_id: question_id, language: language}, 
-      {text: req.body.text, nextQuestions: req.body.nextQuestions, template_id: req.body.template_id})
-
-    res.status(200).send("Question "+question_id+" updated!")
-  } 
-
-  else{
-    res.status(404).send("Service not found!")
+      res.status(200).send("Question " + question_id + " updated!");
+    } else {
+      res.status(404).send("Service not found!");
+    }
   }
-
-});
+);
 
 module.exports = router;

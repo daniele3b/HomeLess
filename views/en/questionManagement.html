@@ -80,6 +80,7 @@
                   type="button"
                   data-title="Add"
                   class="btn btn-success mt-1"
+                  @click="switch2Add()"
                 >
                   Add a new question
                 </button>
@@ -176,6 +177,73 @@
                 </table>
               </div>
             </div>
+
+            <!-- ADD MODE-->
+            <div class="card-body" v-else-if="addMode">
+              <h6 style="color:blue;cursor: pointer;"@click="fromAdd2View()"> <b><- Back to view mode</b></h6>
+
+              <div class="row">
+                <div class="col">   
+                  <center>
+              
+              <select  v-model="selectMode" name="mode" id="mode">
+                  <option value="root">Root</option>
+                  <option value="leaf">Leaf</option>
+                  <option value="middle">Middle</option>
+              </select>
+        
+              <div v-if="selectMode=='root'" class="row">
+                <div class="col">
+                  <div class="row mt-2">
+                  <div class="col">
+                  Question_ID: 
+                  </div>
+                  <div class="col">
+                    <input v-model="qId" type="text" minlength="6" maxlength="7" required>
+                  </div>
+
+                  </div>
+
+                  <div class="row mt-2">
+                    <div class="col">
+                      Question's text: 
+                    </div>
+                    <div class="col">
+                      <input v-model="text" type="text" required>
+                    </div>
+
+                    </div>
+
+                    <div class="row mt-2">
+                      <div class="col">
+                        Answer to reach old Root 
+                      </div>
+                      <div class="col">
+                        <input v-model="answer" type="text" required>
+                      </div>
+  
+                      </div>
+                      <div class="row mt-2">
+                        <div class="col">
+                          <button
+                          @click="addQuestion()"
+                          type="button"
+                          data-title="Edit question"
+                          class="btn btn-success mt-2"
+                        >
+                          Add question
+                        </button>
+                        </div>
+                       
+    
+                        </div>
+                  
+             
+            </center>
+           
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -187,15 +255,22 @@
         data: {
           questions: [],
           currentQuestion: null,
+          selectMode:null,
+          qId:"",
+          answer:"",
+
           viewMode: true,
           editMode: false,
           removeMode: false,
+          addMode:false,
+
           removableQuestions: [],
           text: "",
           answers: [],
           template_id: null,
           toRemove: null,
           listQuestionsRemoved: [],
+          
         },
 
         beforeCreate: function () {
@@ -229,6 +304,36 @@
               }
             );
           },
+          addQuestion:function(){
+
+            if(this.selectMode=="root")
+            {
+              this.$http
+              .post(
+                "http://localhost:8080/addQuestion/2/ENG", 
+                {
+                  text: this.text,
+                  answer: this.answer,
+                  template_id: null,
+                  question_id:this.qId,
+                  previousQuestion:"NaN",
+                  language:"ENG"
+                }
+              )
+              .then(
+                (response) => {
+                  alert("Question added!")
+                  this.fromAdd2View()
+
+                },
+                (response) => {
+                       alert("Error during insertion!")
+                      }
+                );
+
+            }
+
+          },
           switch2Edit: function (event) {
             this.viewMode = false;
             this.editMode = true;
@@ -246,6 +351,27 @@
             this.text = this.currentQuestion.text;
             this.answers = this.currentQuestion.nextQuestions;
             this.template_id = this.currentQuestion.template_id;
+          },
+
+          fromAdd2View: function(){
+            this.editMode = false;
+            this.addMode=false;
+            this.viewMode = true;
+            this.text = "";
+            this.answer="";
+            this.qId="";
+            this.answers = [];
+            this.selectMode=null;
+            this.template_id = null;
+
+            this.$http.get("http://localhost:8080/getQuestionsENG/2").then(
+              (response) => {
+                this.questions = response.body;
+              },
+              (response) => {
+                // error callback
+              }
+            );
           },
           fromEdit2View: function () {
             this.editMode = false;
@@ -276,6 +402,11 @@
                 // error callback
               }
             );
+          },
+
+          switch2Add: function () {
+            this.addMode=true;
+            this.viewMode = false;
           },
           removeQuestion: function (event) {
             let question_id = event.target.id;
