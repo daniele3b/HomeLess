@@ -135,7 +135,7 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
 
       await QuestionService2.findOneAndUpdate(
         { question_id: previous_id, language: req.params.language },
-        { nextQuestions: previousQuestion[0].nextQuestions, template_id: null }
+        { nextQuestions: previousQuestion[0].nextQuestions, template_id: null, pathPreviewPdf: ""}
       );
 
       const qService2 = new QuestionService2(question);
