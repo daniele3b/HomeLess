@@ -129,7 +129,7 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
     // adding a leaf question
     else if (nextQuestion_id == "NaN") {
 
-      if(req.body.template_id == undefined) return res.status(400).send("Please specify template_id.")
+     
 
       previousQuestion[0].nextQuestions.push({
         nextQuestionId: question.question_id,

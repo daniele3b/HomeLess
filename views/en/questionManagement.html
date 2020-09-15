@@ -132,6 +132,7 @@
             <!-- REMOVE MODE-->
 
             <div class="card-body" v-else-if="removeMode">
+              <h6 style="color:blue;cursor: pointer;"@click="fromRemove2View()"> <b><- Back to view mode</b></h6>
               <div class="table-responsive" style="height: 550px">
                 <table class="table">
                   <thead class="thead-light">
@@ -162,7 +163,7 @@
                             :id="question.question_id"
                             class="btn btn-danger btn-xs"
                             data-title="Delete"
-                            @click="removeQuestion()"
+                            @click="removeQuestion"
                             data-toggle="modal"
                             data-target="#edit"
                           >
@@ -193,6 +194,8 @@
           text: "",
           answers: [],
           template_id: null,
+          toRemove: null,
+          listQuestionsRemoved: [],
         },
 
         beforeCreate: function () {
@@ -207,6 +210,25 @@
         },
 
         methods: {
+          fromRemove2View: function () {
+            this.editMode = false;
+            this.viewMode = true;
+            this.removeMode = false;
+            this.text = "";
+            this.answers = [];
+            this.template_id = null;
+            this.toRemove = null;
+            this.removableQuestions = [];
+
+            this.$http.get("http://localhost:8080/getQuestionsENG/2").then(
+              (response) => {
+                this.questions = response.body;
+              },
+              (response) => {
+                // error callback
+              }
+            );
+          },
           switch2Edit: function (event) {
             this.viewMode = false;
             this.editMode = true;
@@ -248,11 +270,52 @@
             this.$http.get("/getRemovableQuestions/2/ENG").then(
               (response) => {
                 this.removableQuestions = response.body;
+                console.log(this.removableQuestions);
               },
               (response) => {
                 // error callback
               }
             );
+          },
+          removeQuestion: function (event) {
+            let question_id = event.target.id;
+
+            let i = 0;
+            for (i = 0; i < this.removableQuestions.length; i++) {
+              if (this.removableQuestions[i].question_id == question_id) {
+                console.log("FOUND!");
+                this.toRemove = this.removableQuestions[i];
+                console.log(this.toRemove);
+                break;
+              }
+            }
+
+            this.$http.get("http://localhost:8080/getTreeFrom/" +this.toRemove.question_id +"/2/ENG" )
+              .then(
+                (response) => {
+                  this.listQuestionsRemoved = response.body;
+                  console.log(this.listQuestionsRemoved)
+                  if (!confirm("You'll delete: " + this.listQuestionsRemoved.toString())) 
+                  {
+                    this.listQuestionsRemoved = [];
+                    this.toRemove = null;
+                    return;
+                  }
+
+                  this.$http.delete("http://localhost:8080/removeQuestion/" +this.toRemove.question_id +"/2/ENG")
+                    .then(
+                      (response) => {
+                       this.fromRemove2View()
+                      },
+                      (response) => {
+                        //Error callback
+                      }
+                    );
+                },
+                (response) => {
+                  // error callback
+                }
+              );
           },
           confirmEdit: function () {
             this.$http
