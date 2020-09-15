@@ -75,14 +75,15 @@
                       <!-- FORM -->
                       
                       <center>
+                        <h2><b>DOCUMENT PREVIEW</b></h2>
+                        <img :src="currentQuestion.pathPreviewPdf" width="400px" height="280px">
 
-                      <div class="card" id="card-form">
+
+                      <div class="card mt-3" id="card-form">
                         <div class="card-body">
                           <h2 class="card-title"><b>SERVICE 2</b></h2>
         
                           <div class="container">
-                         
-                            <img :src="currentQuestion.pathPreviewPdf" width="100px">
                             <form
                               method="post"
                               name="form"
