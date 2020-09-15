@@ -143,7 +143,8 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
         .then(() => {
           return res.status(200).send("Question added!");
         })
-        .catch(() => {
+        .catch((err) => {
+          console.log(err);
           return res.status(400).send("Bad request leaf!");
         });
     }

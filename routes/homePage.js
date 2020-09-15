@@ -52,6 +52,10 @@ router.get("/en/login", async (req, res) => {
   res.sendFile(path.join(__dirname, "../views/en", "login.html"));
 });
 
+router.get("/en/credentialVerification", async (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/en", "questionManagement.html"));
+});
+
 router.post("/en/credentialVerification", async (req, res) => {
   const pw = req.body.password;
   if (pw == process.env.ENG_PW) {

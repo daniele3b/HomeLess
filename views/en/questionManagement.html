@@ -133,7 +133,12 @@
             <!-- REMOVE MODE-->
 
             <div class="card-body" v-else-if="removeMode">
-              <h6 style="color:blue;cursor: pointer;"@click="fromRemove2View()"> <b><- Back to view mode</b></h6>
+              <h6
+                style="color: blue; cursor: pointer"
+                @click="fromRemove2View()"
+              >
+                <b><- Back to view mode</b>
+              </h6>
               <div class="table-responsive" style="height: 550px">
                 <table class="table">
                   <thead class="thead-light">
@@ -180,67 +185,120 @@
 
             <!-- ADD MODE-->
             <div class="card-body" v-else-if="addMode">
-              <h6 style="color:blue;cursor: pointer;"@click="fromAdd2View()"> <b><- Back to view mode</b></h6>
+              <h6 style="color: blue; cursor: pointer" @click="fromAdd2View()">
+                <b><- Back to view mode</b>
+              </h6>
 
               <div class="row">
-                <div class="col">   
-                  <center>
-              
-              <select  v-model="selectMode" name="mode" id="mode">
-                  <option value="root">Root</option>
-                  <option value="leaf">Leaf</option>
-                  <option value="middle">Middle</option>
-              </select>
-        
-              <div v-if="selectMode=='root'" class="row">
                 <div class="col">
-                  <div class="row mt-2">
-                  <div class="col">
-                  Question_ID: 
-                  </div>
-                  <div class="col">
-                    <input v-model="qId" type="text" minlength="6" maxlength="7" required>
-                  </div>
+                  <center>
+                    <select v-model="selectMode" name="mode" id="mode">
+                      <option value="root">Root</option>
+                      <option value="leaf">Leaf</option>
+                      <option value="middle">Middle</option>
+                    </select>
 
-                  </div>
-
-                  <div class="row mt-2">
-                    <div class="col">
-                      Question's text: 
-                    </div>
-                    <div class="col">
-                      <input v-model="text" type="text" required>
-                    </div>
-
-                    </div>
-
-                    <div class="row mt-2">
+                    <div v-if="selectMode=='root'" class="row">
                       <div class="col">
-                        Answer to reach old Root 
+                        <div class="row mt-2">
+                          <div class="col">Question_ID:</div>
+                          <div class="col">
+                            <input
+                              v-model="qId"
+                              type="text"
+                              minlength="6"
+                              maxlength="7"
+                              required
+                            />
+                          </div>
+                        </div>
+
+                        <div class="row mt-2">
+                          <div class="col">Question's text:</div>
+                          <div class="col">
+                            <input v-model="text" type="text" required />
+                          </div>
+                        </div>
+
+                        <div class="row mt-2">
+                          <div class="col">Answer to reach old Root</div>
+                          <div class="col">
+                            <input v-model="answer" type="text" required />
+                          </div>
+                        </div>
+                        <div class="row mt-2">
+                          <div class="col">
+                            <button
+                              @click="addQuestion()"
+                              type="button"
+                              data-title="Edit question"
+                              class="btn btn-success mt-2"
+                            >
+                              Add question
+                            </button>
+                          </div>
+                        </div>
                       </div>
+                    </div>
+
+                    <div v-else-if="selectMode=='leaf'">
                       <div class="col">
-                        <input v-model="answer" type="text" required>
-                      </div>
-  
-                      </div>
-                      <div class="row mt-2">
-                        <div class="col">
-                          <button
-                          @click="addQuestion()"
-                          type="button"
-                          data-title="Edit question"
-                          class="btn btn-success mt-2"
-                        >
-                          Add question
-                        </button>
+                        <div class="row mt-2">
+                          <div class="col">Question_ID:</div>
+                          <div class="col">
+                            <input
+                              v-model="qId"
+                              type="text"
+                              minlength="6"
+                              maxlength="7"
+                              required
+                            />
+                          </div>
                         </div>
-                       
-    
+
+                        <div class="row mt-2">
+                          <div class="col">Template ID:</div>
+                          <div class="col">
+                            <input v-model="template_id" type="text" required />
+                          </div>
                         </div>
-                  
-             
-            </center>
-           
+
+                        <div class="row mt-2">
+                          <div class="col">Previous questionId:</div>
+                          <div class="col">
+                            <input v-model="previousQuestion_id" type="text" placeholder="Ex: [Q7_ENG]" maxlength="7" minlength="6" required />
+                          </div>
+                        </div>
+
+                        <div class="row mt-2">
+                          <div class="col">Answer to reach this node</div>
+                          <div class="col">
+                            <input v-model="answer" type="text" required />
+                          </div>
+                        </div>
+
+                        <center>
+                        <form method="post" action="http://localhost:8082/loadingTemplate" enctype="multipart/form-data" name="form">
+                         
+                          <div class="row mt-2">
+                            <div class="col">
+                              <h5><b>TEMPLATE:</b></h5>
+      
+                              <input type="file" name="file" required/>
+                            </div>
+                          </div>
+                          
+                          <input type="submit" class="mt-3"  value="Add question"  @click="addQuestion()" />
+                        </form>
+                      </center>
+
+
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </center>
                 </div>
               </div>
             </div>
@@ -255,14 +313,15 @@
         data: {
           questions: [],
           currentQuestion: null,
-          selectMode:null,
-          qId:"",
-          answer:"",
+          selectMode: null,
+          qId: "",
+          answer: "",
+          previousQuestion_id:"",
 
           viewMode: true,
           editMode: false,
           removeMode: false,
-          addMode:false,
+          addMode: false,
 
           removableQuestions: [],
           text: "",
@@ -270,7 +329,6 @@
           template_id: null,
           toRemove: null,
           listQuestionsRemoved: [],
-          
         },
 
         beforeCreate: function () {
@@ -304,35 +362,48 @@
               }
             );
           },
-          addQuestion:function(){
-
-            if(this.selectMode=="root")
-            {
+          addQuestion: function () {
+            if (this.selectMode == "root") {
               this.$http
-              .post(
-                "http://localhost:8080/addQuestion/2/ENG", 
-                {
+                .post("http://localhost:8080/addQuestion/2/ENG", {
                   text: this.text,
                   answer: this.answer,
                   template_id: null,
-                  question_id:this.qId,
-                  previousQuestion:"NaN",
-                  language:"ENG"
-                }
-              )
-              .then(
-                (response) => {
-                  alert("Question added!")
-                  this.fromAdd2View()
-
-                },
-                (response) => {
-                       alert("Error during insertion!")
-                      }
+                  question_id: this.qId,
+                  previousQuestion: "NaN",
+                  language: "ENG",
+                })
+                .then(
+                  (response) => {
+                    alert("Question added!");
+                    this.fromAdd2View();
+                  },
+                  (response) => {
+                    alert("Error during insertion!");
+                  }
                 );
-
+            }else if(this.selectMode=="leaf")
+            {
+              this.$http
+                .post("http://localhost:8080/addQuestion/2/ENG", {
+                  text: "",
+                  answer: this.answer,
+                  template_id: this.template_id,
+                  question_id: this.qId,
+                  previousQuestion: this.previousQuestion_id,
+                  nextQuestion:"NaN",
+                  language: "ENG",
+                })
+                .then(
+                  (response) => {
+                    alert("Question added!");
+                    this.fromAdd2View();
+                  },
+                  (response) => {
+                    alert("Error during insertion!");
+                  }
+                );
             }
-
           },
           switch2Edit: function (event) {
             this.viewMode = false;
@@ -353,15 +424,16 @@
             this.template_id = this.currentQuestion.template_id;
           },
 
-          fromAdd2View: function(){
+          fromAdd2View: function () {
             this.editMode = false;
-            this.addMode=false;
+            this.previousQuestion_id="";
+            this.addMode = false;
             this.viewMode = true;
             this.text = "";
-            this.answer="";
-            this.qId="";
+            this.answer = "";
+            this.qId = "";
             this.answers = [];
-            this.selectMode=null;
+            this.selectMode = null;
             this.template_id = null;
 
             this.$http.get("http://localhost:8080/getQuestionsENG/2").then(
@@ -405,7 +477,7 @@
           },
 
           switch2Add: function () {
-            this.addMode=true;
+            this.addMode = true;
             this.viewMode = false;
           },
           removeQuestion: function (event) {
@@ -421,22 +493,35 @@
               }
             }
 
-            this.$http.get("http://localhost:8080/getTreeFrom/" +this.toRemove.question_id +"/2/ENG" )
+            this.$http
+              .get(
+                "http://localhost:8080/getTreeFrom/" +
+                  this.toRemove.question_id +
+                  "/2/ENG"
+              )
               .then(
                 (response) => {
                   this.listQuestionsRemoved = response.body;
-                  console.log(this.listQuestionsRemoved)
-                  if (!confirm("You'll delete: " + this.listQuestionsRemoved.toString())) 
-                  {
+                  console.log(this.listQuestionsRemoved);
+                  if (
+                    !confirm(
+                      "You'll delete: " + this.listQuestionsRemoved.toString()
+                    )
+                  ) {
                     this.listQuestionsRemoved = [];
                     this.toRemove = null;
                     return;
                   }
 
-                  this.$http.delete("http://localhost:8080/removeQuestion/" +this.toRemove.question_id +"/2/ENG")
+                  this.$http
+                    .delete(
+                      "http://localhost:8080/removeQuestion/" +
+                        this.toRemove.question_id +
+                        "/2/ENG"
+                    )
                     .then(
                       (response) => {
-                       this.fromRemove2View()
+                        this.fromRemove2View();
                       },
                       (response) => {
                         //Error callback
