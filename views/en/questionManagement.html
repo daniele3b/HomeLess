@@ -33,6 +33,14 @@
             <!-- VIEW MODE-->
 
             <div class="card-body" v-if="viewMode">
+              <div class="row mt-1 mb-2"><div class="col"><span style="float:right;"><input type="text"  minlength="6" maxlength="7"v-model="fromQuestion" placeholder="FROM"> <input type="text" minlength="6" maxlength="7"v-model="toQuestion" placeholder="TO"><button
+                type="button"
+                data-title="Search"
+                class="btn btn-success ml-1"
+                @click="searchPath()"
+              >
+                Search Path
+              </button> </span></div></div>
               <div class="table-responsive" style="height: 550px">
                 <table class="table">
                   <thead class="thead-light">
@@ -400,6 +408,8 @@
       var app = new Vue({
         el: "#app",
         data: {
+          fromQuestion:"",
+          toQuestion:"",
           questions: [],
           currentQuestion: null,
           selectMode: null,
@@ -408,6 +418,7 @@
           previousQuestion_id:"",
           nextQuestion_Id:"",
           path:"",
+          listPathQuestions:[],
 
           viewMode: true,
           editMode: false,
@@ -593,6 +604,28 @@
           switch2Add: function () {
             this.addMode = true;
             this.viewMode = false;
+          },
+
+          searchPath: function()
+          {
+             this.$http.get("http://localhost:8080/getPath/from/"+this.fromQuestion+"/to/"+this.toQuestion+"/2/ENG")
+              .then(
+                (response) => {
+
+                  this.listPathQuestions=response.body;
+                  alert(this.listPathQuestions)
+                  this.listPathQuestions=[]
+                  this.fromQuestion=""
+                  this.toQuestion=""
+
+                },(response) => {
+                  alert("Path not found!")
+                  this.listPathQuestions=[]
+                  this.fromQuestion=""
+                  this.toQuestion=""
+                })
+
+
           },
           removeQuestion: function (event) {
             let question_id = event.target.id;
