@@ -85,6 +85,50 @@ function getTree(question){
     })
 }
 
+function getPath(questionStart, questionEnd){
+
+    return new Promise(async function(resolve, reject){
+        let path = []
+        let actualQuestion = questionEnd
+
+        // Loop until i am on the root
+        while(actualQuestion.previousQuestion != null){
+            
+        // Push the actual question
+            path.push(actualQuestion.question_id)
+            
+            // If the actual question is the startQuestion, i return my path
+            if(actualQuestion.question_id == questionStart.question_id){
+                resolve(path.reverse())
+            } 
+
+            // Else, i go up on the tree
+            let previous = await QuestionService2.find({question_id: actualQuestion.previousQuestion, 
+                language: actualQuestion.language})
+        
+            previous = previous[0]
+
+            actualQuestion = previous
+        }
+
+        // Before returning an empty array, i have to check that if tree's root is my startQuestion: if it is,
+        // i push it, because it is part of the path, otherwise it will be ignored by the while loop
+        let qStart = await QuestionService2.find({previousQuestion: null, language: questionStart.language,});
+        qStart = qStart[0]
+
+        if(qStart.question_id == questionStart.question_id){
+            path.push(qStart.question_id)
+            resolve(path.reverse())
+        }
+    
+        // Else, there is no path between these two questions
+        path = []
+
+        resolve(path)
+    })
+
+}
+
 exports.removeQuestionService2 = removeQuestionService2
 exports.getTree = getTree
-exports.questionsArray = questionsArray
+exports.getPath = getPath
