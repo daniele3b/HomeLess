@@ -128,6 +128,10 @@ router.get("/getRemovableQuestions/:service/:language", async (req, res) => {
 router.post("/addQuestion/:service/:language", async (req, res) => {
   const service = req.params.service;
 
+  if (req.params.language.length != 3) return res.status(400).send("Invalid language.");
+  /*if(req.body.question_id.length < 6 || req.body.question_id.length > 7)
+    return res.status(400).send("Invalid question id.")*/
+
   const question = {
     question_id: req.body.question_id,
     previousQuestion: req.body.previousQuestion,
@@ -139,13 +143,15 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
   };
 
   if (question.text != "") {
-    const questionInDB = await QuestionService2.find({
-      text: question.text,
-      language: req.params.language,
-    });
-
-    if (questionInDB.length > 0)
-      return res.status(400).send("Question already exists.");
+    if(service == "2"){
+      const questionInDB = await QuestionService2.find({
+        text: question.text,
+        language: req.params.language,
+      });
+  
+      if (questionInDB.length > 0)
+        return res.status(400).send("Question already exists.");
+    }
   }
   //Getting question_id of children question and answer to reach it
   const nextQuestion_id = req.body.nextQuestion;
