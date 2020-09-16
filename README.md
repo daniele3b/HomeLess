@@ -9,6 +9,7 @@ Homeless is a project born to help people in difficulty with their renters. The 
 You need to have installed these external dependecies:
 * Pandoc
 * RabbitMQ
+* MongoDB
 
 After installing, you have to follow these instructions:
 * run **npm install** in the command line
