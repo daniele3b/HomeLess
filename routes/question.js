@@ -127,6 +127,7 @@ router.get("/getRemovableQuestions/:service/:language", async (req, res) => {
 
 router.post("/addQuestion/:service/:language", async (req, res) => {
   const service = req.params.service;
+
   const question = {
     question_id: req.body.question_id,
     previousQuestion: req.body.previousQuestion,
@@ -137,13 +138,15 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
     nextQuestions: [],
   };
 
-  const questionInDB = await QuestionService2.find({
-    text: question.text,
-    language: req.params.language,
-  });
-  if (questionInDB.length > 0)
-    return res.status(400).send("Question already exists.");
+  if (question.text != "") {
+    const questionInDB = await QuestionService2.find({
+      text: question.text,
+      language: req.params.language,
+    });
 
+    if (questionInDB.length > 0)
+      return res.status(400).send("Question already exists.");
+  }
   //Getting question_id of children question and answer to reach it
   const nextQuestion_id = req.body.nextQuestion;
   const answer = req.body.answer;
@@ -179,13 +182,18 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
 
     // adding a leaf question
     else if (nextQuestion_id == "NaN") {
-      let qleaf = await QuestionService2.find({
-        language: req.params.language,
-        template_id: req.body.template_id,
-      });
+      console.log("LEAF INSERTION!");
 
-      if (qleaf.length > 0)
-        return res.status(400).send("Template already used!");
+      if (req.body.template_id != null) {
+        console.log("Looking for duplicated template id");
+        let qleaf = await QuestionService2.find({
+          language: req.params.language,
+          template_id: req.body.template_id,
+        });
+
+        if (qleaf.length > 0)
+          return res.status(400).send("Template already used!");
+      }
 
       previousQuestion[0].nextQuestions.push({
         nextQuestionId: question.question_id,
@@ -316,6 +324,7 @@ router.delete(
         question_id: question_id,
         language: language,
       });
+
       if (question.length == 0)
         return res
           .status(404)
@@ -326,12 +335,19 @@ router.delete(
       console.log(question.previousQuestion);
       console.log(language);
 
+      if (question.previousQuestion == null) {
+        await QuestionService2.deleteMany({});
+        console.log("REMOVED ALL TREE");
+        return res
+          .status(200)
+          .send("Question " + question_id + " and his child removed.");
+      }
       let father = await QuestionService2.find({
         question_id: question.previousQuestion,
         language: language,
       });
       father = father[0];
-
+      console.log(father);
       const newChildren = [];
       let i;
       const dim = father.nextQuestions.length;

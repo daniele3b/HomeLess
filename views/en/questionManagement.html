@@ -202,9 +202,10 @@
                 <div class="col">
                   <center>
                     <select v-model="selectMode" name="mode" id="mode">
-                      <option value="root">Root</option>
-                      <option value="leaf">Leaf</option>
-                      <option value="middle">Middle</option>
+                      <option value="root" v-if="!emptyTree">Root</option>
+                      <option value="leaf" v-if="!emptyTree">Leaf</option>
+                      <option value="middle" v-if="!emptyTree">Middle</option>
+                      <option value="empty" v-if="emptyTree">Empty</option>
                     </select>
 
                     <!-- ROOT INSERT-->
@@ -252,6 +253,45 @@
                         </div>
                       </div>
                     </div>
+
+                    <!-- EMPTY INSERTION-->
+                    <div v-else-if="selectMode=='empty'" class="row">
+                      <div class="col">
+                        <div class="row mt-2">
+                          <div class="col">Question_ID:</div>
+                          <div class="col">
+                            <input
+                            placeholder="Ex: [Q7_ENG]"
+                              v-model="qId"
+                              type="text"
+                              minlength="6"
+                              maxlength="7"
+                              required
+                            />
+                          </div>
+                        </div>
+
+                        <div class="row mt-2">
+                          <div class="col">Question's text:</div>
+                          <div class="col">
+                            <input v-model="text" type="text" required />
+                          </div>
+                        </div>
+
+                        <div class="row mt-2">
+                          <div class="col">
+                            <button
+                              @click="addQuestion()"
+                              type="button"
+                              data-title="Edit question"
+                              class="btn btn-success mt-2"
+                            >
+                              Add question
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                     
                     <!-- LEAF INSERT-->
                     
@@ -274,7 +314,7 @@
                         <div class="row mt-2">
                           <div class="col">Template ID:</div>
                           <div class="col">
-                            <input v-model="template_id" type="text" required />
+                            <input v-model="template_id" type="text" default="null"/>
                           </div>
                         </div>
 
@@ -307,7 +347,7 @@
                             <div class="col">
                               <h5><b>TEMPLATE:</b></h5>
       
-                              <input type="file" name="file" required/>
+                              <input type="file" name="file" />
                             </div>
                           </div>
                           
@@ -425,6 +465,7 @@
           editMode: false,
           removeMode: false,
           addMode: false,
+          emptyTree:false,
 
           removableQuestions: [],
           text: "",
@@ -438,8 +479,14 @@
           this.$http.get("http://localhost:8080/getQuestionsENG/2").then(
             (response) => {
               this.questions = response.body;
+              
+    
             },
             (response) => {
+
+              this.questions=[]
+              if(this.questions.length==0)
+                this.emptyTree=true
               // error callback
             }
           );
@@ -528,7 +575,30 @@
                   }
                 );
 
+            }else if(this.selectMode=="empty"){
+              this.$http
+                .post("http://localhost:8080/addQuestion/2/ENG", {
+                  text: this.text,
+                  answer: "",
+                  template_id: null,
+                  question_id: this.qId,
+                  previousQuestion: "NaN",
+                  nextQuestion:"NaN",
+                  language: "ENG",
+                  pathPreviewPdf:""
+                })
+                .then(
+                  (response) => {
+                    alert("Question added!");
+                    this.emptyTree=false;
+                    this.fromAdd2View();
+                  },
+                  (response) => {
+                    alert("Error during insertion!");
+                  }
+                );
             }
+        
           },
           switch2Edit: function (event) {
             this.viewMode = false;
