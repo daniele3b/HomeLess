@@ -191,8 +191,10 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
           template_id: req.body.template_id,
         });
 
-        if (qleaf.length > 0)
+        if (qleaf.length > 0) {
+          console.log("FOUND DUPLICATED TEMPLATE_ID");
           return res.status(400).send("Template already used!");
+        }
       }
 
       previousQuestion[0].nextQuestions.push({
@@ -213,10 +215,12 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
       qService2
         .save()
         .then(() => {
+          console.log("INSERTION LEAF OK!");
           return res.status(200).send("Question added!");
         })
         .catch((err) => {
           console.log(err);
+          console.log("INSERTION LEAF !OK");
           return res.status(400).send("Bad request leaf!");
         });
     }
