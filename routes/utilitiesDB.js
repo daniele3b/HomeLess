@@ -15,7 +15,7 @@ router.get("/getQuestionsITA/:service", async (req, res) => {
 
     else{
         // Holder
-        res.send("Complete for other services!")
+        res.status(404).send("Service not found!")
     }
 });
 
@@ -32,7 +32,7 @@ router.get("/getQuestionsENG/:service", async (req, res) => {
 
     else{
         // Holder
-        res.send("Complete for other services!")
+        res.status(404).send("Service not found!")
     }
 });
 
@@ -49,7 +49,7 @@ router.get("/getQuestionsARB/:service", async (req, res) => {
 
     else{
         // Holder
-        res.send("Complete for other services!")
+        res.status(404).send("Service not found!")
     }
 });
 
