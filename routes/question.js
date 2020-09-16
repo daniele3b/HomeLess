@@ -129,8 +129,8 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
   const service = req.params.service;
 
   if (req.params.language.length != 3) return res.status(400).send("Invalid language.");
-  /*if(req.body.question_id.length < 6 || req.body.question_id.length > 7)
-    return res.status(400).send("Invalid question id.")*/
+  if(req.body.question_id.length < 6 || req.body.question_id.length > 7)
+    return res.status(400).send("Invalid question id.")
 
   const question = {
     question_id: req.body.question_id,
