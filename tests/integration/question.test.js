@@ -1012,7 +1012,7 @@ describe('Question', () => {
         
     })
 
-    describe("DELETE /removeQuestion/:question_id/:service/:language", async () => {
+    describe("DELETE /removeQuestion/:question_id/:service/:language", () => {
         let service
         let language
         let question_id
