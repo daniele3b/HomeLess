@@ -12,7 +12,7 @@ if (config.get("security_active") == "yes" && process.env.NODE_ENV != "test") {
   getPublicKeys();
 }
 
-if (config.get("blockChainActive") == "yes") {
+if (config.get("blockChainActive") == "yes" && process.env.NODE_ENV != "test") {
   const { mine } = require("./helper/mine");
 
   var bodyParser = require("body-parser");
