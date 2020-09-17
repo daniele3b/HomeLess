@@ -487,7 +487,7 @@
               this.questions=[]
               if(this.questions.length==0)
                 this.emptyTree=true
-              // error callback
+                alert("No elements found!")
             }
           );
         },
@@ -508,6 +508,7 @@
                 this.questions = response.body;
               },
               (response) => {
+                alert("No elements found!")
                 // error callback
               }
             );
@@ -529,7 +530,7 @@
                     this.fromAdd2View();
                   },
                   (response) => {
-                    alert("Error during insertion!");
+                    alert(response.bodyText)
                   }
                 );
             }else if(this.selectMode=="leaf")
@@ -572,7 +573,8 @@
                     this.fromAdd2View();
                   },
                   (response) => {
-                    alert("Error during insertion!");
+                    alert(response.bodyText)
+                
                   }
                 );
 
@@ -595,7 +597,7 @@
                     this.fromAdd2View();
                   },
                   (response) => {
-                    alert("Error during insertion!");
+                    alert(response.bodyText)
                   }
                 );
             }
@@ -638,6 +640,7 @@
                 this.questions = response.body;
               },
               (response) => {
+                alert("No elements found!")
                 // error callback
               }
             );
@@ -654,6 +657,7 @@
                 this.questions = response.body;
               },
               (response) => {
+                alert("No elements found!")
                 // error callback
               }
             );
@@ -668,6 +672,7 @@
                 console.log(this.removableQuestions);
               },
               (response) => {
+                alert("No elements found!")
                 // error callback
               }
             );
@@ -691,7 +696,8 @@
                   this.toQuestion=""
 
                 },(response) => {
-                  alert("Path not found!")
+                 
+                  alert(response.bodyText)
                   this.listPathQuestions=[]
                   this.fromQuestion=""
                   this.toQuestion=""
@@ -743,11 +749,13 @@
                         this.fromRemove2View();
                       },
                       (response) => {
+                        alert(response.bodyText)
                         //Error callback
                       }
                     );
                 },
                 (response) => {
+                  alert(response.bodyText)
                   // error callback
                 }
               );
@@ -773,6 +781,7 @@
                         this.questions = response.body;
                       },
                       (response) => {
+                        alert(response.bodyText)
                         // error callback
                       }
                     );
@@ -784,6 +793,7 @@
                   this.viewMode = true;
                 },
                 (response) => {
+                  alert(response.bodyText)
                   // error callback
                 }
               );

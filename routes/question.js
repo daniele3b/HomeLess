@@ -13,9 +13,9 @@ router.get("/getQuestion/:question_id/:service/:language", async (req, res) => {
   const language = req.params.language;
 
   const regex = /Q[1-9][0-9]*_((ENG)*|(ITA)*|(ARB)*)$/;
-  const validQuestion = regex.test(question_id)
+  const validQuestion = regex.test(question_id);
 
-  if(!validQuestion) return res.status(400).send("Invalid question id.")
+  if (!validQuestion) return res.status(400).send("Invalid question id.");
 
   if (language.length != 3) return res.status(400).send("Invalid language.");
 
@@ -42,10 +42,10 @@ router.get("/getTreeFrom/:question_id/:service/:language", async (req, res) => {
   const language = req.params.language;
 
   const regex = /Q[1-9][0-9]*_((ENG)*|(ITA)*|(ARB)*)$/;
-  const validQuestion = regex.test(question_id)
+  const validQuestion = regex.test(question_id);
 
-  if(!validQuestion) return res.status(400).send("Invalid question id.")
-  
+  if (!validQuestion) return res.status(400).send("Invalid question id.");
+
   if (language.length != 3) return res.status(400).send("Invalid language.");
 
   if (service == "2") {
@@ -75,13 +75,15 @@ router.get(
     const language = req.params.language;
 
     const regex = /Q[1-9][0-9]*_((ENG)*|(ITA)*|(ARB)*)$/;
-    const validQuestionStart = regex.test(questionStartId)
+    const validQuestionStart = regex.test(questionStartId);
 
-    if(!validQuestionStart) return res.status(400).send("Invalid question start id.")
-    
-    const validQuestionEnd = regex.test(questionEndId)
+    if (!validQuestionStart)
+      return res.status(400).send("Invalid question start id.");
 
-    if(!validQuestionEnd) return res.status(400).send("Invalid question end id.")
+    const validQuestionEnd = regex.test(questionEndId);
+
+    if (!validQuestionEnd)
+      return res.status(400).send("Invalid question end id.");
 
     if (language.length != 3) return res.status(400).send("Invalid language.");
 
@@ -138,12 +140,13 @@ router.get("/getRemovableQuestions/:service/:language", async (req, res) => {
 router.post("/addQuestion/:service/:language", async (req, res) => {
   const service = req.params.service;
 
-  if (req.params.language.length != 3) return res.status(400).send("Invalid language.");
-  
-  const regex = /Q[1-9][0-9]*_((ENG)*|(ITA)*|(ARB)*)$/;
-  const validQuestion = regex.test(req.body.question_id)
+  if (req.params.language.length != 3)
+    return res.status(400).send("Invalid language.");
 
-  if(!validQuestion) return res.status(400).send("Invalid question id.")
+  const regex = /Q[1-9][0-9]*_((ENG)*|(ITA)*|(ARB)*)$/;
+  const validQuestion = regex.test(req.body.question_id);
+
+  if (!validQuestion) return res.status(400).send("Invalid question id.");
 
   const question = {
     question_id: req.body.question_id,
@@ -156,12 +159,12 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
   };
 
   if (question.text != "") {
-    if(service == "2"){
+    if (service == "2") {
       const questionInDB = await QuestionService2.find({
         text: question.text,
         language: req.params.language,
       });
-  
+
       if (questionInDB.length > 0)
         return res.status(400).send("Question already exists.");
     }
@@ -203,9 +206,10 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
     else if (nextQuestion_id == "NaN") {
       console.log("LEAF INSERTION!");
 
-      const validPreviousQuestion = regex.test(req.body.previousQuestion)
+      const validPreviousQuestion = regex.test(req.body.previousQuestion);
 
-      if(!validPreviousQuestion) return res.status(400).send("Invalid previous question id.")
+      if (!validPreviousQuestion)
+        return res.status(400).send("Invalid previous question id.");
 
       if (req.body.template_id != null) {
         console.log("Looking for duplicated template id");
@@ -277,11 +281,13 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
     } else {
       //getting children to update from father question
 
-      const validPreviousQuestion = regex.test(req.body.previousQuestion)
-      if(!validPreviousQuestion) return res.status(400).send("Invalid previous question id.")
+      const validPreviousQuestion = regex.test(req.body.previousQuestion);
+      if (!validPreviousQuestion)
+        return res.status(400).send("Invalid previous question id.");
 
-      const validNextQuestion = regex.test(req.body.nextQuestion)
-      if(!validNextQuestion) return res.status(400).send("Invalid next question id.")
+      const validNextQuestion = regex.test(req.body.nextQuestion);
+      if (!validNextQuestion)
+        return res.status(400).send("Invalid next question id.");
 
       const childrenQuestion = previousQuestion[0].nextQuestions.filter(
         (obj) => {
@@ -350,9 +356,9 @@ router.delete(
     const language = req.params.language;
 
     const regex = /Q[1-9][0-9]*_((ENG)*|(ITA)*|(ARB)*)$/;
-    const validQuestion = regex.test(question_id)
+    const validQuestion = regex.test(question_id);
 
-    if(!validQuestion) return res.status(400).send("Invalid question id.")
+    if (!validQuestion) return res.status(400).send("Invalid question id.");
 
     if (language.length != 3) return res.status(400).send("Invalid language.");
 
@@ -416,11 +422,23 @@ router.put(
     const language = req.params.language;
 
     const regex = /Q[1-9][0-9]*_((ENG)*|(ITA)*|(ARB)*)$/;
-    const validQuestion = regex.test(question_id)
+    const validQuestion = regex.test(question_id);
 
-    if(!validQuestion) return res.status(400).send("Invalid question id.")
-    
+    if (!validQuestion) return res.status(400).send("Invalid question id.");
+
     if (language.length != 3) return res.status(400).send("Invalid language.");
+
+    if (req.body.text != "") {
+      if (service == "2") {
+        const questionInDB = await QuestionService2.find({
+          text: req.body.text,
+          language: req.params.language,
+        });
+
+        if (questionInDB.length > 0)
+          return res.status(400).send("Question already exists.");
+      }
+    }
 
     if (service == "2") {
       let question = await QuestionService2.find({
