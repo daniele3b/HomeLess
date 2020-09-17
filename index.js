@@ -3,12 +3,12 @@ const app = express();
 var cors = require("cors");
 const config = require("config");
 const { getPublicKeys } = require("./startup/getPublicKey");
-
+require("dotenv").config()
 app.use(cors());
 
 require("./startup/db")();
 
-if (config.get("security_active") == "yes") {
+if (config.get("security_active") == "yes" && process.env.NODE_ENV != "test") {
   getPublicKeys();
 }
 
