@@ -43,14 +43,6 @@ describe('Question', () => {
             expect(res.status).toBe(400)
         })
 
-        it("should return 400 if question_id is more than 7 characters", async () => {
-            question_id = "Q1_ENGL"
-
-            const res = await exec()
-    
-            expect(res.status).toBe(400)
-        })
-
         it("should return 400 if language is less than 3 characthers", async () => {
             language = "IT"
 
@@ -126,14 +118,6 @@ describe('Question', () => {
 
         it("should return 400 if question_id is less than 6 characters", async () => {
             question_id = "Q1_IT"
-
-            const res = await exec()
-    
-            expect(res.status).toBe(400)
-        })
-
-        it("should return 400 if question_id is more than 7 characters", async () => {
-            question_id = "Q1_ENGL"
 
             const res = await exec()
     
@@ -284,14 +268,6 @@ describe('Question', () => {
 
         it("should return 400 if questionStartId is less than 6 characters", async () => {
             questionStartId = "Q1_IT"
-
-            const res = await exec()
-    
-            expect(res.status).toBe(400)
-        })
-
-        it("should return 400 if questionStartId is more than 7 characters", async () => {
-            questionStartId = "Q1_ENGL"
 
             const res = await exec()
     
@@ -688,14 +664,6 @@ describe('Question', () => {
             expect(res.status).toBe(400)
         })
 
-        it("should return 400 if question_id is more than 7 characters", async () => {
-            question_id = "Q1_ENGL"
-
-            const res = await exec()
-    
-            expect(res.status).toBe(400)
-        })
-
         it("should return 404 if service is not found", async () => {
             question_id = "Q1_ENG"
             language = "ENG"
@@ -1078,14 +1046,6 @@ describe('Question', () => {
             expect(res.status).toBe(400)
         })
 
-        it("should return 400 if question_id is more than 7 characters", async () => {
-            question_id = "Q1_ENGL"
-
-            const res = await exec()
-    
-            expect(res.status).toBe(400)
-        })
-
         it("should return 404 if service is not found", async () => {
             language = "ENG"
             service = "not_a_service"
@@ -1195,14 +1155,6 @@ describe('Question', () => {
 
         it("should return 400 if question_id is less than 6 characters", async () => {
             question_id = "Q1_IT"
-
-            const res = await exec()
-    
-            expect(res.status).toBe(400)
-        })
-
-        it("should return 400 if question_id is more than 7 characters", async () => {
-            question_id = "Q1_ENGL"
 
             const res = await exec()
     
