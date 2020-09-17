@@ -7,7 +7,7 @@ let server
 
 describe('Utilities DB', () => {
 
-    describe("/getQuestionsITA/:service", () => {
+    describe("GET /getQuestionsITA/:service", () => {
 
         beforeAll(async () => {
             const url = config.get("db_test")
@@ -72,7 +72,7 @@ describe('Utilities DB', () => {
         
     })
 
-    describe("/getQuestionsENG/:service", () => {
+    describe("GET /getQuestionsENG/:service", () => {
 
         beforeAll(async () => {
             const url = config.get("db_test")
@@ -137,7 +137,7 @@ describe('Utilities DB', () => {
         
     })
 
-    describe("/getQuestionsARB/:service", () => {
+    describe("GET /getQuestionsARB/:service", () => {
 
         beforeAll(async () => {
             const url = config.get("db_test")

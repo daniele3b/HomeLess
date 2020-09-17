@@ -1159,7 +1159,7 @@ describe('Question', () => {
 
     })
 
-    describe("/modifyQuestion/:question_id/:service/:language", () => {
+    describe("PUT /modifyQuestion/:question_id/:service/:language", () => {
         let service
         let language
         let question_id
