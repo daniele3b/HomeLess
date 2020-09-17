@@ -598,8 +598,11 @@ describe('Question', () => {
 
             expect(res.status).toBe(200)
             expect(res.body.length).toBe(2)
-            expect(res.body[0].question_id).toBe(q1.question_id);
-            expect(res.body[1].question_id).toBe(q2.question_id);
+            expect(res.body.some(q => q.question_id == q1.question_id)).toBeTruthy()
+            expect(res.body.some(q => q.question_id == q2.question_id)).toBeTruthy()
+            expect(res.body.some(q => q.question_id == q3.question_id)).toBeFalsy()
+            expect(res.body.some(q => q.question_id == q4.question_id)).toBeFalsy()
+            expect(res.body.some(q => q.question_id == q5.question_id)).toBeFalsy()
         })
         
     })
@@ -803,8 +806,7 @@ describe('Question', () => {
 
             const rootNewNextQuestionsLength = rootOldNextQuestionsLength + 1
             expect(root.nextQuestions.length).toBe(rootNewNextQuestionsLength)
-            expect(root.nextQuestions[rootNewNextQuestionsLength - 1].nextQuestionId).toBe("Q2_ENG")
-            expect(root.nextQuestions[rootNewNextQuestionsLength - 1].answer).toBe("Go to Q2")
+            expect(root.nextQuestions.some(q => q.nextQuestionId == "Q2_ENG" && q.answer == "Go to Q2")).toBeTruthy()
         })
 
         it("[with template_id] should insert a new leaf question for service 2", async () => {
@@ -864,8 +866,7 @@ describe('Question', () => {
 
             const oldLeafNewNextQuestionLength = oldLeafOldNextQuestionLength + 1
             expect(oldLeaf.nextQuestions.length).toBe(oldLeafNewNextQuestionLength)
-            expect(oldLeaf.nextQuestions[oldLeafNewNextQuestionLength - 1].nextQuestionId).toBe("Q3_ENG")
-            expect(oldLeaf.nextQuestions[oldLeafNewNextQuestionLength - 1].answer).toBe("Go to Q3")
+            expect(oldLeaf.nextQuestions.some(q => q.nextQuestionId == "Q3_ENG" && q.answer == "Go to Q3")).toBeTruthy()
             expect(oldLeaf.pathPreviewPdf).toBe("")
             expect(oldLeaf.template_id).toBe(null)
         })
@@ -1032,9 +1033,8 @@ describe('Question', () => {
             let next = await QuestionService2.find({question_id: q2.question_id, language: language})
             next = next[0]
 
-            expect(prev.nextQuestions.some(q => q.nextQuestionId == added.question_id)).toBeTruthy()
-            expect(prev.nextQuestions.some(q => q.answer == "Go to Q3")).toBeTruthy()
-            
+            expect(prev.nextQuestions.some(q => q.nextQuestionId == added.question_id && q.answer == "Go to Q3")).toBeTruthy()
+
             expect(added.question_id).toBe("Q3_ENG")
             expect(added.previousQuestion).toBe("Q1_ENG")
             expect(added.nextQuestions.some(q => q.nextQuestionId == "Q2_ENG")).toBeTruthy()
@@ -1269,9 +1269,16 @@ describe('Question', () => {
             let updatedQuestion = await QuestionService2.find({question_id: question_id, language: language})
             updatedQuestion = updatedQuestion[0]
 
+            expect(updatedQuestion.text).not.toBe("First question")
             expect(updatedQuestion.text).toBe("Root question")
+
+            expect(updatedQuestion.nextQuestions[0].answer).not.toBe("Go to Q2")
             expect(updatedQuestion.nextQuestions[0].answer).toBe("Go to question 2")
+
+            expect(updatedQuestion.nextQuestions[1].answer).not.toBe("Go to Q3")
             expect(updatedQuestion.nextQuestions[1].answer).toBe("Go to question 3")
+            
+            expect(updatedQuestion.template_id).not.toBe(null)
             expect(updatedQuestion.template_id).toBe("T1")
         })
     })
