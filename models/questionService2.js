@@ -6,6 +6,7 @@ const QuestionService2Schema = new mongoose.Schema({
     required: true,
     minlength: 6,
     maxlength: 7,
+    validate: /Q[1-9][0-9]*_((ENG)*|(ITA)*|(ARB)*)$/,
     unique: true,
   },
   text: {

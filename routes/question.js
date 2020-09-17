@@ -129,8 +129,11 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
   const service = req.params.service;
 
   if (req.params.language.length != 3) return res.status(400).send("Invalid language.");
-  if(req.body.question_id.length < 6 || req.body.question_id.length > 7)
-    return res.status(400).send("Invalid question id.")
+  
+  const regex = /Q[1-9][0-9]*_((ENG)*|(ITA)*|(ARB)*)$/;
+  const validQuestion = regex.test(req.body.question_id)
+
+  if(!validQuestion) return res.status(400).send("Invalid question id.")
 
   const question = {
     question_id: req.body.question_id,
@@ -189,6 +192,10 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
     // adding a leaf question
     else if (nextQuestion_id == "NaN") {
       console.log("LEAF INSERTION!");
+
+      const validPreviousQuestion = regex.test(req.body.previousQuestion)
+
+      if(!validPreviousQuestion) return res.status(400).send("Invalid previous question id.")
 
       if (req.body.template_id != null) {
         console.log("Looking for duplicated template id");
@@ -259,6 +266,13 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
         });
     } else {
       //getting children to update from father question
+
+      const validPreviousQuestion = regex.test(req.body.previousQuestion)
+      if(!validPreviousQuestion) return res.status(400).send("Invalid previous question id.")
+
+      const validNextQuestion = regex.test(req.body.nextQuestion)
+      if(!validNextQuestion) return res.status(400).send("Invalid next question id.")
+
       const childrenQuestion = previousQuestion[0].nextQuestions.filter(
         (obj) => {
           if (obj.nextQuestionId == nextQuestion_id) {
