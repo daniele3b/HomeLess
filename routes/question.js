@@ -173,9 +173,6 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
   const nextQuestion_id = req.body.nextQuestion;
   const answer = req.body.answer;
 
-  console.log("STARTING QUESTION:" + question);
-  console.log("NEXT:" + nextQuestion_id);
-
   if (service == "2") {
     //Getting father question_id
     let previous_id = question.previousQuestion;
@@ -185,8 +182,6 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
       question_id: previous_id,
       language: req.params.language,
     });
-
-    console.log("FATHER" + previousQuestion);
 
     if (nextQuestion_id == "NaN" && req.body.previousQuestion == "NaN") {
       question.previousQuestion = null;
@@ -204,22 +199,18 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
 
     // adding a leaf question
     else if (nextQuestion_id == "NaN") {
-      console.log("LEAF INSERTION!");
-
       const validPreviousQuestion = regex.test(req.body.previousQuestion);
 
       if (!validPreviousQuestion)
         return res.status(400).send("Invalid previous question id.");
 
       if (req.body.template_id != null) {
-        console.log("Looking for duplicated template id");
         let qleaf = await QuestionService2.find({
           language: req.params.language,
           template_id: req.body.template_id,
         });
 
         if (qleaf.length > 0) {
-          console.log("FOUND DUPLICATED TEMPLATE_ID");
           return res.status(400).send("Template already used!");
         }
       }
@@ -242,12 +233,9 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
       qService2
         .save()
         .then(() => {
-          console.log("INSERTION LEAF OK!");
           return res.status(200).send("Question added!");
         })
         .catch((err) => {
-          console.log(err);
-          console.log("INSERTION LEAF !OK");
           return res.status(400).send("Bad request leaf!");
         });
     }
@@ -262,7 +250,6 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
         { previousQuestion: question.question_id }
       );
 
-      console.log(oldRoot);
       question.nextQuestions = [
         { nextQuestionId: oldRoot.question_id, answer: answer },
       ];
@@ -275,7 +262,6 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
           return res.status(200).send("Question added!");
         })
         .catch((err) => {
-          console.log(err);
           return res.status(400).send("Bad request root!");
         });
     } else {
@@ -309,9 +295,6 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
         },
       ];
 
-      console.log("CHILDREN ADDED 2 NEW" + question.nextQuestions);
-
-      console.log("CHILDREN ID NEW" + childrenQuestion[0].nextQuestionId);
       //updating previousQuestion on child with new question
       await QuestionService2.findOneAndUpdate(
         { question_id: childrenQuestion[0].nextQuestionId },
@@ -330,8 +313,6 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
           };
         }
       }
-
-      console.log(previousQuestion[0].nextQuestions);
 
       //Updating father with correct children
       await QuestionService2.findOneAndUpdate(
@@ -375,12 +356,8 @@ router.delete(
 
       question = question[0];
 
-      console.log(question.previousQuestion);
-      console.log(language);
-
       if (question.previousQuestion == null) {
         await QuestionService2.deleteMany({});
-        console.log("REMOVED ALL TREE");
         return res
           .status(200)
           .send("Question " + question_id + " and his child removed.");
@@ -390,7 +367,6 @@ router.delete(
         language: language,
       });
       father = father[0];
-      console.log(father);
       const newChildren = [];
       let i;
       const dim = father.nextQuestions.length;
