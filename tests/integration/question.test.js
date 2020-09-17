@@ -1228,6 +1228,7 @@ describe('Question', () => {
         let text
         let nextQuestions
         let template_id
+        let pathPreviewPdf
 
         const exec = async () => {
             return await request(server)
@@ -1235,7 +1236,8 @@ describe('Question', () => {
                 .send({
                     text: text,
                     nextQuestions: nextQuestions,
-                    template_id: template_id
+                    template_id: template_id,
+                    pathPreviewPdf: pathPreviewPdf
                 })
         }
 
@@ -1265,7 +1267,7 @@ describe('Question', () => {
 
         it("should return 400 if question's text is found in DB for another question in the same language", async () => {
             let q1 = new QuestionService2({
-                question_id: 'Q1_ENG',
+                question_id: 'Q2_ENG',
                 language: "ENG",
                 text: "Same question's text",
                 previousQuestion: null,
@@ -1315,7 +1317,7 @@ describe('Question', () => {
                 previousQuestion: null,
                 nextQuestions: [{nextQuestionId: "Q2_ENG", answer: "Go to Q2"}, 
                     {nextQuestionId: "Q3_ENG", answer: "Go to Q3"}],
-                pathPreviewPdf: "",
+                pathPreviewPdf: "preview.jpg",
                 template_id: null
             })
             
@@ -1329,6 +1331,7 @@ describe('Question', () => {
             nextQuestions = [{nextQuestionId: "Q2_ENG", answer: "Go to question 2"}, 
                 {nextQuestionId: "Q3_ENG", answer: "Go to question 3"}]
             template_id = "T1"
+            pathPreviewPdf = "modified.jpg"
 
             const res = await exec()
 
@@ -1348,6 +1351,9 @@ describe('Question', () => {
             
             expect(updatedQuestion.template_id).not.toBe(null)
             expect(updatedQuestion.template_id).toBe("T1")
+
+            expect(updatedQuestion.pathPreviewPdf).not.toBe("preview.jpg")
+            expect(updatedQuestion.pathPreviewPdf).toBe("modified.jpg")
         })
     })
 
