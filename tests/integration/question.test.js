@@ -35,7 +35,7 @@ describe('Question', () => {
             return await request(server).get("/getQuestion/"+question_id+"/"+service+"/"+language)
         }
 
-        it("should return 400 if question_id is less than 6 characters", async () => {
+        it("should return 400 if question_id is invalid", async () => {
             question_id = "Q1_IT"
 
             const res = await exec()
@@ -116,7 +116,7 @@ describe('Question', () => {
             return await request(server).get("/getTreeFrom/"+question_id+"/"+service+"/"+language)
         }
 
-        it("should return 400 if question_id is less than 6 characters", async () => {
+        it("should return 400 if question_id is invalid", async () => {
             question_id = "Q1_IT"
 
             const res = await exec()
@@ -266,7 +266,7 @@ describe('Question', () => {
                 .get("/getPath/from/"+questionStartId+"/to/"+questionEndId+"/"+service+"/"+language)
         }
 
-        it("should return 400 if questionStartId is less than 6 characters", async () => {
+        it("should return 400 if questionStartId is invalid", async () => {
             questionStartId = "Q1_IT"
 
             const res = await exec()
@@ -274,16 +274,8 @@ describe('Question', () => {
             expect(res.status).toBe(400)
         })
 
-        it("should return 400 if questionEndId is less than 6 characters", async () => {
+        it("should return 400 if questionEndId is invalid", async () => {
             questionEndId = "Q5_IT"
-
-            const res = await exec()
-    
-            expect(res.status).toBe(400)
-        })
-
-        it("should return 400 if questionEndId is more than 7 characters", async () => {
-            questionEndId = "Q5_ENGL"
 
             const res = await exec()
     
@@ -656,7 +648,7 @@ describe('Question', () => {
             expect(res.status).toBe(400)
         })
 
-        it("should return 400 if question_id is less than 6 characters", async () => {
+        it("should return 400 if question_id is invalid", async () => {
             question_id = "Q1_IT"
 
             const res = await exec()
@@ -755,6 +747,20 @@ describe('Question', () => {
             expect(root.text).toBe("New root question")
 
             expect(oldRoot.previousQuestion).toBe("Q2_ENG")
+        })
+
+        it("should return 400 if previousQuestionId is invalid for a leaf insertion", async () => {
+            nextQuestion = "NaN"
+            previousQuestion = "Q1_EN"
+            text = "Leaf question"
+            question_id = "Q2_ENG"
+            language = "ENG"
+            service = "2"
+            answer = "Go to Q2"
+
+            const res = await exec()
+    
+            expect(res.status).toBe(400)
         })
 
         it("[no template_id] should insert a new leaf question for service 2", async () => {
@@ -903,6 +909,34 @@ describe('Question', () => {
             expect(res.status).toBe(400)
         })
 
+        it("should return 400 if previousQuestionId is invalid for a middle insertion", async () => {
+            nextQuestion = "Q2_ENG"
+            previousQuestion = "Q1_EN"
+            text = "Middle question"
+            question_id = "Q3_ENG"
+            language = "ENG"
+            service = "2"
+            answer = "Go to Q3"
+
+            const res = await exec()
+    
+            expect(res.status).toBe(400)
+        })
+
+        it("should return 400 if nextQuestionId is invalid for a middle insertion", async () => {
+            nextQuestion = "Q2_EN"
+            previousQuestion = "Q1_ENG"
+            text = "Middle question"
+            question_id = "Q3_ENG"
+            language = "ENG"
+            service = "2"
+            answer = "Go to Q3"
+
+            const res = await exec()
+    
+            expect(res.status).toBe(400)
+        })
+
         it("should return 400 if it is impossible to create a link between the two questions specified for service 2", async () => {
             let q1 = new QuestionService2({
                 question_id: 'Q1_ENG',
@@ -1038,7 +1072,7 @@ describe('Question', () => {
             expect(res.status).toBe(400)
         })
 
-        it("should return 400 if question_id is less than 6 characters", async () => {
+        it("should return 400 if question_id is invalid", async () => {
             question_id = "Q1_IT"
 
             const res = await exec()
@@ -1153,11 +1187,35 @@ describe('Question', () => {
             expect(res.status).toBe(400)
         })
 
-        it("should return 400 if question_id is less than 6 characters", async () => {
+        it("should return 400 if question_id is invalid", async () => {
             question_id = "Q1_IT"
 
             const res = await exec()
     
+            expect(res.status).toBe(400)
+        })
+
+        it("should return 400 if question's text is found in DB for another question in the same language", async () => {
+            let q1 = new QuestionService2({
+                question_id: 'Q1_ENG',
+                language: "ENG",
+                text: "Same question's text",
+                previousQuestion: null,
+                nextQuestions: [],
+                pathPreviewPdf: "",
+                template_id: null
+            })
+            
+            await q1.save()
+
+            question_id = "Q1_ENG"
+            language = "ENG"
+            service = "2"
+
+            text = "Same question's text"
+
+            const res = await exec()
+
             expect(res.status).toBe(400)
         })
 
