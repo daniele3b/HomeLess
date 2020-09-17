@@ -425,7 +425,7 @@ router.put(
           language: req.params.language,
         });
 
-        if (questionInDB.length > 0)
+        if (questionInDB.length > 0 && questionInDB[0].question_id != question_id)
           return res.status(400).send("Question with the same text already exists.");
       }
     }
@@ -446,6 +446,7 @@ router.put(
           text: req.body.text,
           nextQuestions: req.body.nextQuestions,
           template_id: req.body.template_id,
+          pathPreviewPdf: req.body.pathPreviewPdf
         }
       );
 

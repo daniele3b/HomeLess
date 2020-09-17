@@ -126,6 +126,10 @@
                     TEMPLATE ID
                     <input type="text" v-model="template_id" />
                   </div>
+                  <div class="mt-2" v-if="currentQuestion.nextQuestions.length == 0">
+                    PATH PREVIEW
+                    <input type="text" v-model="path" />
+                  </div>
 
                   <button
                     @click="confirmEdit()"
@@ -620,6 +624,7 @@
             this.text = this.currentQuestion.text;
             this.answers = this.currentQuestion.nextQuestions;
             this.template_id = this.currentQuestion.template_id;
+            this.path = this.currentQuestion.pathPreviewPdf;
           },
 
           fromAdd2View: function () {
@@ -634,6 +639,7 @@
             this.answers = [];
             this.selectMode = null;
             this.template_id = null;
+            this.path = "";
 
             this.$http.get("http://localhost:8080/getQuestionsENG/2").then(
               (response) => {
@@ -651,6 +657,7 @@
             this.text = "";
             this.answers = [];
             this.template_id = null;
+            this.path = "";
 
             this.$http.get("http://localhost:8080/getQuestionsENG/2").then(
               (response) => {
@@ -770,6 +777,7 @@
                   text: this.text,
                   nextQuestions: this.answers,
                   template_id: this.template_id,
+                  pathPreviewPdf: this.path
                 }
               )
               .then(
@@ -786,6 +794,7 @@
                       }
                     );
                   this.text = "";
+                  this.path = "";
                   this.answers = [];
                   this.template_id = null;
 
