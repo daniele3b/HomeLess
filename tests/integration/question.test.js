@@ -659,6 +659,26 @@ describe('Question', () => {
             expect(res.status).toBe(400)
         })
 
+        it("should return 400 if question with the given question_id is found in DB", async () => {
+            let q1 = new QuestionService2({
+                question_id: 'Q1_ENG',
+                language: "ENG",
+                text: "Test question",
+                previousQuestion: null,
+                nextQuestions: [],
+                pathPreviewPdf: "",
+                template_id: null
+            })
+            
+            await q1.save()
+
+            question_id = "Q1_ITA"
+
+            const res = await exec()
+    
+            expect(res.status).toBe(400)
+        })
+
         it("should return 404 if service is not found", async () => {
             question_id = "Q1_ENG"
             language = "ENG"
@@ -764,6 +784,14 @@ describe('Question', () => {
             const res = await exec()
     
             expect(res.status).toBe(400)
+        })
+
+        it("should return 404 if previousQuestion is not found in DB for a leaf insertion", async () => {
+            previousQuestion = "Q1_ENG"
+            
+            const res = await exec()
+    
+            expect(res.status).toBe(404)
         })
 
         it("[no template_id] should insert a new leaf question for service 2", async () => {
@@ -936,6 +964,46 @@ describe('Question', () => {
             const res = await exec()
     
             expect(res.status).toBe(400)
+        })
+
+        it("should return 404 if previousQuestion is not found in DB for a middle insertion", async () => {
+            nextQuestion = "Q2_ENG"
+            previousQuestion = "Q1_ENG"
+            text = "Middle question"
+            question_id = "Q3_ENG"
+            language = "ENG"
+            service = "2"
+            answer = "Go to Q3"
+
+            const res = await exec()
+    
+            expect(res.status).toBe(404)
+        })
+
+        it("should return 404 if nextQuestion is not found in DB for a middle insertion", async () => {
+            let q1 = new QuestionService2({
+                question_id: 'Q1_ENG',
+                language: "ENG",
+                text: "Root question",
+                previousQuestion: null,
+                nextQuestions: [],
+                pathPreviewPdf: "",
+                template_id: null
+            })
+            
+            await q1.save()
+
+            nextQuestion = "Q2_ENG"
+            previousQuestion = "Q1_ENG"
+            text = "Middle question"
+            question_id = "Q3_ENG"
+            language = "ENG"
+            service = "2"
+            answer = "Go to Q3"
+
+            const res = await exec()
+    
+            expect(res.status).toBe(404)
         })
 
         it("should return 400 if it is impossible to create a link between the two questions specified for service 2", async () => {

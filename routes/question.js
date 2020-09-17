@@ -12,7 +12,7 @@ router.get("/getQuestion/:question_id/:service/:language", async (req, res) => {
   const service = req.params.service;
   const language = req.params.language;
 
-  const regex = /Q[1-9][0-9]*_((ENG)*|(ITA)*|(ARB)*)$/;
+  const regex = /Q[1-9]{1}[0-9]?_((ENG)|(ITA)|(ARB))$/;
   const validQuestion = regex.test(question_id);
 
   if (!validQuestion) return res.status(400).send("Invalid question id.");
@@ -26,7 +26,7 @@ router.get("/getQuestion/:question_id/:service/:language", async (req, res) => {
     });
 
     if (question.length == 0)
-      return res.status(404).send("Question with the given id not found.");
+      return res.status(404).send("Question with the given id not found in DB.");
 
     question = question[0];
 
@@ -41,7 +41,7 @@ router.get("/getTreeFrom/:question_id/:service/:language", async (req, res) => {
   const service = req.params.service;
   const language = req.params.language;
 
-  const regex = /Q[1-9][0-9]*_((ENG)*|(ITA)*|(ARB)*)$/;
+  const regex = /Q[1-9]{1}[0-9]?_((ENG)|(ITA)|(ARB))$/;
   const validQuestion = regex.test(question_id);
 
   if (!validQuestion) return res.status(400).send("Invalid question id.");
@@ -55,7 +55,7 @@ router.get("/getTreeFrom/:question_id/:service/:language", async (req, res) => {
     });
 
     if (question.length == 0)
-      return res.status(404).send("Question not found!");
+      return res.status(404).send("Question with the given id not found in DB.");
     question = question[0];
 
     getTree(question).then((questions) => {
@@ -74,7 +74,7 @@ router.get(
     const service = req.params.service;
     const language = req.params.language;
 
-    const regex = /Q[1-9][0-9]*_((ENG)*|(ITA)*|(ARB)*)$/;
+    const regex = /Q[1-9]{1}[0-9]?_((ENG)|(ITA)|(ARB))$/;
     const validQuestionStart = regex.test(questionStartId);
 
     if (!validQuestionStart)
@@ -93,14 +93,14 @@ router.get(
         language: language,
       });
       if (questionEnd.length == 0)
-        return res.status(404).send("Question end not found!");
+        return res.status(404).send("Question end with the given id not found in DB.");
 
       let questionStart = await QuestionService2.find({
         question_id: questionStartId,
         language: language,
       });
       if (questionStart.length == 0)
-        return res.status(404).send("Question start not found!");
+        return res.status(404).send("Question start with the given id not found in DB.");
 
       questionStart = questionStart[0];
       questionEnd = questionEnd[0];
@@ -143,10 +143,13 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
   if (req.params.language.length != 3)
     return res.status(400).send("Invalid language.");
 
-  const regex = /Q[1-9][0-9]*_((ENG)*|(ITA)*|(ARB)*)$/;
+  const regex = /Q[1-9]{1}[0-9]?_((ENG)|(ITA)|(ARB))$/;
   const validQuestion = regex.test(req.body.question_id);
 
   if (!validQuestion) return res.status(400).send("Invalid question id.");
+
+  const qInDB = await QuestionService2.find({question_id: req.body.question_id, language: req.params.language})
+  if(qInDB.length > 0) return res.status(400).send("Question with the given id already used.")
 
   const question = {
     question_id: req.body.question_id,
@@ -166,7 +169,7 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
       });
 
       if (questionInDB.length > 0)
-        return res.status(400).send("Question already exists.");
+        return res.status(400).send("Question with the same text already exists.");
     }
   }
   //Getting question_id of children question and answer to reach it
@@ -182,7 +185,8 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
       question_id: previous_id,
       language: req.params.language,
     });
-
+    
+    // Adding the first question of the tree
     if (nextQuestion_id == "NaN" && req.body.previousQuestion == "NaN") {
       question.previousQuestion = null;
 
@@ -197,12 +201,15 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
         });
     }
 
-    // adding a leaf question
+    // Adding a leaf question
     else if (nextQuestion_id == "NaN") {
       const validPreviousQuestion = regex.test(req.body.previousQuestion);
 
       if (!validPreviousQuestion)
         return res.status(400).send("Invalid previous question id.");
+
+      const prevNotInDB = await QuestionService2.find({question_id: req.body.previousQuestion, language: req.params.language})
+      if(prevNotInDB.length == 0) return res.status(404).send("Previous question with the given id not found in DB.")
 
       if (req.body.template_id != null) {
         let qleaf = await QuestionService2.find({
@@ -275,6 +282,13 @@ router.post("/addQuestion/:service/:language", async (req, res) => {
       if (!validNextQuestion)
         return res.status(400).send("Invalid next question id.");
 
+      const prevNotInDB = await QuestionService2.find({question_id: req.body.previousQuestion, language: req.params.language})
+      if(prevNotInDB.length == 0) return res.status(404).send("Previous question with the given id not found in DB.")
+
+      const nextNotInDB = await QuestionService2.find({question_id: req.body.nextQuestion, language: req.params.language})
+      if(nextNotInDB.length == 0) return res.status(404).send("Next question with the given id not found in DB.")
+
+
       const childrenQuestion = previousQuestion[0].nextQuestions.filter(
         (obj) => {
           if (obj.nextQuestionId == nextQuestion_id) {
@@ -336,7 +350,7 @@ router.delete(
     const service = req.params.service;
     const language = req.params.language;
 
-    const regex = /Q[1-9][0-9]*_((ENG)*|(ITA)*|(ARB)*)$/;
+    const regex = /Q[1-9]{1}[0-9]?_((ENG)|(ITA)|(ARB))$/;
     const validQuestion = regex.test(question_id);
 
     if (!validQuestion) return res.status(400).send("Invalid question id.");
@@ -397,7 +411,7 @@ router.put(
     const service = req.params.service;
     const language = req.params.language;
 
-    const regex = /Q[1-9][0-9]*_((ENG)*|(ITA)*|(ARB)*)$/;
+    const regex = /Q[1-9]{1}[0-9]?_((ENG)|(ITA)|(ARB))$/;
     const validQuestion = regex.test(question_id);
 
     if (!validQuestion) return res.status(400).send("Invalid question id.");
@@ -412,7 +426,7 @@ router.put(
         });
 
         if (questionInDB.length > 0)
-          return res.status(400).send("Question already exists.");
+          return res.status(400).send("Question with the same text already exists.");
       }
     }
 
