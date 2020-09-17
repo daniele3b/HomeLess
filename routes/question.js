@@ -12,8 +12,11 @@ router.get("/getQuestion/:question_id/:service/:language", async (req, res) => {
   const service = req.params.service;
   const language = req.params.language;
 
-  if (question_id.length < 6 || question_id.length > 7)
-    return res.status(400).send("Invalid question id.");
+  const regex = /Q[1-9][0-9]*_((ENG)*|(ITA)*|(ARB)*)$/;
+  const validQuestion = regex.test(question_id)
+
+  if(!validQuestion) return res.status(400).send("Invalid question id.")
+
   if (language.length != 3) return res.status(400).send("Invalid language.");
 
   if (service == "2") {
@@ -38,8 +41,11 @@ router.get("/getTreeFrom/:question_id/:service/:language", async (req, res) => {
   const service = req.params.service;
   const language = req.params.language;
 
-  if (question_id.length < 6 || question_id.length > 7)
-    return res.status(400).send("Invalid question id.");
+  const regex = /Q[1-9][0-9]*_((ENG)*|(ITA)*|(ARB)*)$/;
+  const validQuestion = regex.test(question_id)
+
+  if(!validQuestion) return res.status(400).send("Invalid question id.")
+  
   if (language.length != 3) return res.status(400).send("Invalid language.");
 
   if (service == "2") {
@@ -68,10 +74,14 @@ router.get(
     const service = req.params.service;
     const language = req.params.language;
 
-    if (questionStartId.length < 6 || questionStartId.length > 7)
-      return res.status(400).send("Invalid question start id.");
-    if (questionEndId.length < 6 || questionEndId.length > 7)
-      return res.status(400).send("Invalid question end id.");
+    const regex = /Q[1-9][0-9]*_((ENG)*|(ITA)*|(ARB)*)$/;
+    const validQuestionStart = regex.test(questionStartId)
+
+    if(!validQuestionStart) return res.status(400).send("Invalid question start id.")
+    
+    const validQuestionEnd = regex.test(questionEndId)
+
+    if(!validQuestionEnd) return res.status(400).send("Invalid question end id.")
 
     if (language.length != 3) return res.status(400).send("Invalid language.");
 
@@ -339,8 +349,11 @@ router.delete(
     const service = req.params.service;
     const language = req.params.language;
 
-    if (question_id.length < 6 || question_id.length > 7)
-      return res.status(400).send("Invalid question id.");
+    const regex = /Q[1-9][0-9]*_((ENG)*|(ITA)*|(ARB)*)$/;
+    const validQuestion = regex.test(question_id)
+
+    if(!validQuestion) return res.status(400).send("Invalid question id.")
+
     if (language.length != 3) return res.status(400).send("Invalid language.");
 
     if (service == "2") {
@@ -402,8 +415,11 @@ router.put(
     const service = req.params.service;
     const language = req.params.language;
 
-    if (question_id.length < 6 || question_id.length > 7)
-      return res.status(400).send("Invalid question id.");
+    const regex = /Q[1-9][0-9]*_((ENG)*|(ITA)*|(ARB)*)$/;
+    const validQuestion = regex.test(question_id)
+
+    if(!validQuestion) return res.status(400).send("Invalid question id.")
+    
     if (language.length != 3) return res.status(400).send("Invalid language.");
 
     if (service == "2") {
