@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const {QuestionService2} = require("../models/questionService2")
 
+// Get all italian questions for a specific service
 router.get("/getQuestionsITA/:service", async (req, res) => {
     const service = req.params.service
 
@@ -19,6 +20,7 @@ router.get("/getQuestionsITA/:service", async (req, res) => {
     }
 });
 
+// Get all english questions for a specific service
 router.get("/getQuestionsENG/:service", async (req, res) => {
     const service = req.params.service
 
@@ -36,6 +38,7 @@ router.get("/getQuestionsENG/:service", async (req, res) => {
     }
 });
 
+// Get all arabic questions for a specific service
 router.get("/getQuestionsARB/:service", async (req, res) => {
     const service = req.params.service
 
