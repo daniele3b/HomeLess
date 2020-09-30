@@ -37,6 +37,8 @@ describe('Question', () => {
 
         it("should return 400 if question_id is invalid", async () => {
             question_id = "Q1_IT"
+            language = "ITA"
+            service = "2"
 
             const res = await exec()
     
@@ -44,7 +46,9 @@ describe('Question', () => {
         })
 
         it("should return 400 if language is less than 3 characthers", async () => {
+            question_id = "Q1_ITA"
             language = "IT"
+            service = "2"
 
             const res = await exec()
     
@@ -52,7 +56,9 @@ describe('Question', () => {
         })
 
         it("should return 400 if language is more than 3 characthers", async () => {
+            question_id = "Q1_ENG"
             language = "ENGL"
+            service = "2"
 
             const res = await exec()
     
@@ -118,6 +124,8 @@ describe('Question', () => {
 
         it("should return 400 if question_id is invalid", async () => {
             question_id = "Q1_IT"
+            language = "ITA"
+            service = "2"
 
             const res = await exec()
     
@@ -125,7 +133,9 @@ describe('Question', () => {
         })
 
         it("should return 400 if language is less than 3 characthers", async () => {
+            question_id = "Q1_ITA"
             language = "IT"
+            service = "2"
 
             const res = await exec()
     
@@ -133,7 +143,9 @@ describe('Question', () => {
         })
 
         it("should return 400 if language is more than 3 characthers", async () => {
+            question_id = "Q1_ENG"
             language = "ENGL"
+            service = "2"
 
             const res = await exec()
     
@@ -267,7 +279,10 @@ describe('Question', () => {
         }
 
         it("should return 400 if questionStartId is invalid", async () => {
+            service = "2"
+            language = "ITA"
             questionStartId = "Q1_IT"
+            questionEndId = "Q5_ITA"
 
             const res = await exec()
     
@@ -275,6 +290,9 @@ describe('Question', () => {
         })
 
         it("should return 400 if questionEndId is invalid", async () => {
+            service = "2"
+            language = "ITA"
+            questionStartId = "Q1_ITA"
             questionEndId = "Q5_IT"
 
             const res = await exec()
@@ -283,7 +301,10 @@ describe('Question', () => {
         })
 
         it("should return 400 if language is less than 3 characthers", async () => {
+            service = "2"
             language = "IT"
+            questionStartId = "Q1_ITA"
+            questionEndId = "Q5_ITA"
 
             const res = await exec()
     
@@ -291,7 +312,10 @@ describe('Question', () => {
         })
 
         it("should return 400 if language is more than 3 characthers", async () => {
+            service = "2"
             language = "ENGL"
+            questionStartId = "Q1_ENG"
+            questionEndId = "Q5_ENG"
 
             const res = await exec()
     
@@ -309,17 +333,8 @@ describe('Question', () => {
             expect(res.status).toBe(404)
         })
 
-        it("should return 404 if questionStart for service 2 with the given id is not found in DB", async () => {
-            questionStartId = "Q1_ENG"
-            language = "ENG"
-            service = "2"
-
-            const res = await exec()
-
-            expect(res.status).toBe(404)
-        })
-
         it("should return 404 if questionEnd for service 2 with the given id is not found in DB", async () => {
+            questionStartId = "Q1_ENG"
             questionEnd = "Q5_ENG"
             language = "ENG"
             service = "2"
@@ -329,7 +344,33 @@ describe('Question', () => {
             expect(res.status).toBe(404)
         })
 
-        it("should return the subtree starting from a question with the given questionStartId and ending to a question with the given QuestionEndId for service 2 if it exists", async () => {
+        it("should return 404 if questionStart for service 2 with the given id is not found in DB", async () => {
+
+            // Saving a question end before calling the endpoint, because the control for question start is made after
+            // the control for question end
+            let qEnd = new QuestionService2({
+                question_id: 'Q5_ENG',
+                language: "ENG",
+                text: "test question",
+                previousQuestion: "Q3_ENG",
+                nextQuestions: [{nextQuestionId: "Q4_ENG", answer: "Go to Q4"}],
+                pathPreviewPdf: "",
+                template_id: null
+            })
+
+            questionStartId = "Q1_ENG"
+            questionEnd = "Q5_ENG"
+            language = "ENG"
+            service = "2"
+            
+            await qEnd.save()
+
+            const res = await exec()
+
+            expect(res.status).toBe(404)
+        })
+
+        it("should return the path starting from a question with the given questionStartId and ending to a question with the given QuestionEndId for service 2 if it exists", async () => {
 
             let q1 = new QuestionService2({
                 question_id: 'Q1_ENG',
@@ -495,6 +536,7 @@ describe('Question', () => {
 
         it("should return 400 if language is less than 3 characthers", async () => {
             language = "IT"
+            service = "2"
 
             const res = await exec()
     
@@ -503,6 +545,7 @@ describe('Question', () => {
 
         it("should return 400 if language is more than 3 characthers", async () => {
             language = "ENGL"
+            service = "2"
 
             const res = await exec()
     
@@ -652,6 +695,7 @@ describe('Question', () => {
         })
 
         it("should return 400 if question_id is invalid", async () => {
+            language = "ITA"
             question_id = "Q1_IT"
 
             const res = await exec()
@@ -672,7 +716,8 @@ describe('Question', () => {
             
             await q1.save()
 
-            question_id = "Q1_ITA"
+            question_id = "Q1_ENG"
+            language = "ENG"
 
             const res = await exec()
     
@@ -787,7 +832,13 @@ describe('Question', () => {
         })
 
         it("should return 404 if previousQuestion is not found in DB for a leaf insertion", async () => {
+            nextQuestion = "NaN"
             previousQuestion = "Q1_ENG"
+            text = "Leaf question"
+            question_id = "Q2_ENG"
+            language = "ENG"
+            service = "2"
+            answer = "Go to Q2"
             
             const res = await exec()
     
@@ -981,7 +1032,10 @@ describe('Question', () => {
         })
 
         it("should return 404 if nextQuestion is not found in DB for a middle insertion", async () => {
-            let q1 = new QuestionService2({
+            
+            // Saving the previous question in DB, because the control for the previous question is made before the
+            // control for the next question
+            let prevQuestion = new QuestionService2({
                 question_id: 'Q1_ENG',
                 language: "ENG",
                 text: "Root question",
@@ -991,7 +1045,7 @@ describe('Question', () => {
                 template_id: null
             })
             
-            await q1.save()
+            await prevQuestion.save()
 
             nextQuestion = "Q2_ENG"
             previousQuestion = "Q1_ENG"
@@ -1126,6 +1180,8 @@ describe('Question', () => {
 
         it("should return 400 if language is less than 3 characthers", async () => {
             language = "IT"
+            service = "2"
+            question_id = "Q1_ITA"
 
             const res = await exec()
     
@@ -1134,6 +1190,8 @@ describe('Question', () => {
 
         it("should return 400 if language is more than 3 characthers", async () => {
             language = "ENGL"
+            service = "2"
+            question_id = "Q1_ENG"
 
             const res = await exec()
     
@@ -1141,6 +1199,8 @@ describe('Question', () => {
         })
 
         it("should return 400 if question_id is invalid", async () => {
+            language = "ITA"
+            service = "2"
             question_id = "Q1_IT"
 
             const res = await exec()
@@ -1243,6 +1303,8 @@ describe('Question', () => {
 
         it("should return 400 if language is less than 3 characthers", async () => {
             language = "IT"
+            service = "2"
+            question_id = "Q1_ITA"
 
             const res = await exec()
     
@@ -1251,6 +1313,8 @@ describe('Question', () => {
 
         it("should return 400 if language is more than 3 characthers", async () => {
             language = "ENGL"
+            service = "2"
+            question_id = "Q1_ENG"
 
             const res = await exec()
     
@@ -1258,6 +1322,8 @@ describe('Question', () => {
         })
 
         it("should return 400 if question_id is invalid", async () => {
+            language = "ITA"
+            service = "2"
             question_id = "Q1_IT"
 
             const res = await exec()
