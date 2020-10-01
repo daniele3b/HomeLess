@@ -28,6 +28,7 @@ After installing, you have to follow these instructions:
 * dotenv
 * cryptr
 * multer
+* nodemon
 * jest
 * supertest
 
