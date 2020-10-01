@@ -21,6 +21,7 @@ After installing, you have to follow these instructions:
 * config
 * express
 * amqplib
+* mongoose
 * body-parser
 * cors
 * axios
