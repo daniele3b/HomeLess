@@ -26,9 +26,6 @@ After installing, you have to follow these instructions:
 * cors
 * axios
 * dotenv
-* nodemailer
-* randomstring
-* replace-in-file
 * cryptr
 * multer
 * jest
