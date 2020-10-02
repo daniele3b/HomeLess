@@ -1,5 +1,6 @@
 # HomeLess
 Homeless is a project born to help people in difficulty with their renters. The purpose is to create a pdf template engine to generate documents to search a pacific solution with renters. This idea borns because of the increase evictions in the last months caused by COVID-19 emergency.
+This project is created on collaboration with [Justice Connect](https://justiceconnect.org.au/) and [DLA Piper](https://www.dlapiper.com/en/uk/), at the request of the [International Rescue Committee](https://www.rescue.org/).
 
 [Help us](https://github.com/daniele3b/HomeLess/wiki)
 
